@@ -1,29 +1,37 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BoardSetup : MonoBehaviour
 {
 	[SerializeField] GameObject whitePrefab;
 	[SerializeField] GameObject redPrefab;
-	[SerializeField] Transform[] whiteStartPositions;
-	[SerializeField] Transform[] redStartPositions;
+	[SerializeField] PositionLabel[] whiteStartPositions;
+	[SerializeField] PositionLabel[] redStartPositions;
 	int whiteSpawnCount = 1;
 	int redSpawnCount = 1;
 
 	void Start ()
 	{
-		foreach (Transform whiteStartPosition in whiteStartPositions)
+		foreach (PositionLabel whiteStartPosition in whiteStartPositions)
 		{
-			var clone = Instantiate(whitePrefab, whiteStartPosition.position, whiteStartPosition.rotation);
+			whiteStartPosition.OccupationValue = 1;
+			var clone = Instantiate(whitePrefab, whiteStartPosition.transform.position, whiteStartPosition.transform.rotation) as GameObject;
 			clone.name = "White_" + whiteSpawnCount;
 			whiteSpawnCount++;
+
+			CheckerContainer checkerContainerScript = clone.GetComponent<CheckerContainer>();
+			checkerContainerScript.BoardLocation = whiteStartPosition.PositionValue;
 		}
 
-		foreach (Transform redStartPosition in redStartPositions)
+		foreach (PositionLabel redStartPosition in redStartPositions)
 		{
-			var clone = Instantiate(redPrefab, redStartPosition.position, redStartPosition.rotation);
+			redStartPosition.OccupationValue = 2;
+			var clone = Instantiate(redPrefab, redStartPosition.transform.position, redStartPosition.transform.rotation) as GameObject;
 			clone.name = "Red_" + redSpawnCount;
 			redSpawnCount++;
+
+			CheckerContainer checkerContainerScript = clone.GetComponent<CheckerContainer>();
+			checkerContainerScript.BoardLocation = redStartPosition.PositionValue;
 		}
 	}
 }
