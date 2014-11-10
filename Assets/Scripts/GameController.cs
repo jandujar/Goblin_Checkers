@@ -3,12 +3,23 @@ using System.Collections;
 
 public class GameController : MonoBehaviour
 {
+	[SerializeField] bool whiteStart = true;
 	[SerializeField] PositionLabel[] positionLabels;
 	GameObject checkerOfInterest;
+	bool whiteTurn;
 	PositionLabel potentialMoveLabel;
 	CheckerContainer checkerContainerScript;
 	int checkerPosition;
 	public GameObject CheckerOfInterest { get { return checkerOfInterest; } set { checkerOfInterest = value; }}
+	public bool WhiteTurn { get { return whiteTurn; } set { whiteTurn = value; }}
+
+	void Start()
+	{
+		if (whiteStart)
+			whiteTurn = true;
+		else
+			whiteTurn = false;
+	}
 
 	public void ClearPositionLabels()
 	{
@@ -23,8 +34,17 @@ public class GameController : MonoBehaviour
 	{
 		CheckerOfInterest = selectedChecker;
 		checkerContainerScript = selectedChecker.GetComponent<CheckerContainer>();
-		checkerPosition = checkerContainerScript.BoardLocation;
-		SelectedCheckerMoves(selectedChecker);
+
+		if (checkerContainerScript.PieceColor == 1 && WhiteTurn)
+		{
+			checkerPosition = checkerContainerScript.BoardLocation;
+			SelectedCheckerMoves(selectedChecker);
+		}
+		else if (checkerContainerScript.PieceColor == 2 && !WhiteTurn)
+		{
+			checkerPosition = checkerContainerScript.BoardLocation;
+			SelectedCheckerMoves(selectedChecker);
+		}
 	}
 
 	void SelectedCheckerMoves(GameObject selectedChecker)

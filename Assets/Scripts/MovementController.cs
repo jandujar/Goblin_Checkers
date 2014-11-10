@@ -21,7 +21,6 @@ public class MovementController : MonoBehaviour
 	{
 		if (enableMovement)
 		{
-
 			if (Vector3.Distance(checkerObject.transform.position, newTransform.position) > 0.001f)
 			{
 				checkerObject.transform.position = Vector3.Lerp(checkerObject.transform.position, newTransform.position, Time.deltaTime * 4f);
@@ -32,7 +31,13 @@ public class MovementController : MonoBehaviour
 			{
 				checkerObject.transform.position = newTransform.position;
 				enableMovement = false;
+
+				if (gameController.WhiteTurn)
+					gameController.WhiteTurn = false;
+				else
+					gameController.WhiteTurn = true;
 			}
+
 		}
 	}
 }
