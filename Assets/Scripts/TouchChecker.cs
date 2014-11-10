@@ -37,12 +37,8 @@ public class TouchChecker : MonoBehaviour
 	{
 		if (gesture.pickObject == gameObject)
 		{
-			CheckerContainer checkerContainerScript = gameObject.GetComponent<CheckerContainer>();
-			int checkerPosition = checkerContainerScript.BoardLocation;
-			Debug.Log("Selected: " + gameObject.name + ", Location: " + checkerPosition);
-
 			gameController.ClearPositionLabels();
-			gameController.FindSelectedCheckerMoves(gameObject);
+			gameController.FindSelectedCheckerOptions(gameObject);
 		}
 	}
 }

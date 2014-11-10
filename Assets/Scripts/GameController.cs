@@ -4,7 +4,11 @@ using System.Collections;
 public class GameController : MonoBehaviour
 {
 	[SerializeField] PositionLabel[] positionLabels;
+	GameObject checkerOfInterest;
 	PositionLabel potentialMoveLabel;
+	CheckerContainer checkerContainerScript;
+	int checkerPosition;
+	public GameObject CheckerOfInterest { get { return checkerOfInterest; } set { checkerOfInterest = value; }}
 
 	public void ClearPositionLabels()
 	{
@@ -15,46 +19,73 @@ public class GameController : MonoBehaviour
 		}
 	}
 
-	public void FindSelectedCheckerMoves(GameObject selectedChecker)
+	public void FindSelectedCheckerOptions(GameObject selectedChecker)
 	{
-		CheckerContainer checkerContainerScript = selectedChecker.GetComponent<CheckerContainer>();
-		int checkerPosition = checkerContainerScript.BoardLocation;
+		CheckerOfInterest = selectedChecker;
+		checkerContainerScript = selectedChecker.GetComponent<CheckerContainer>();
+		checkerPosition = checkerContainerScript.BoardLocation;
+		SelectedCheckerMoves(selectedChecker);
+	}
 
+	void SelectedCheckerMoves(GameObject selectedChecker)
+	{
 		if (checkerContainerScript.PieceColor == 1)
 		{
 			if (checkerContainerScript.PieceType == 1)
 			{
-				// Check if selected checker can move up and right
-				if(checkerPosition % 8 != 0)
-				{
-					if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
-					{
-						potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
-						Debug.Log(checkerPosition);
-						Debug.Log(potentialMoveLabel.PositionValue);
+				CheckUpLeft();
+				CheckUpRight();
+			}
+			else
+				CheckAll();
+		}
+	}
 
-						if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
-							potentialMoveLabel.EnableMoveIndicator();
-					}
-					else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
-					{
-						potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionLabel>();
-						Debug.Log(checkerPosition);
-						Debug.Log(potentialMoveLabel.PositionValue);
-						
-						if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
-							potentialMoveLabel.EnableMoveIndicator();
-					}
-				}
+	void CheckUpLeft()
+	{
+		if(checkerPosition != 1 && (checkerPosition - 1) % 8 != 0)
+		{
+			if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
+			{
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionLabel>();
+				
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+					potentialMoveLabel.EnableMoveIndicator();
+			}
+			else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
+			{
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+				
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+					potentialMoveLabel.EnableMoveIndicator();
 			}
 		}
 	}
 
-	void Update()
+	void CheckUpRight()
 	{
-		if (Input.GetKeyDown(KeyCode.J))
+		if(checkerPosition % 8 != 0)
 		{
-			Debug.Log(positionLabels[11].OccupationValue);
+			if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
+			{
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+				
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+					potentialMoveLabel.EnableMoveIndicator();
+			}
+			else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
+			{
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionLabel>();
+				
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+					potentialMoveLabel.EnableMoveIndicator();
+			}
 		}
+	}
+
+	void CheckAll()
+	{
+		CheckUpLeft();
+		CheckUpRight();
 	}
 }
