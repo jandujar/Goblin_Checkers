@@ -39,7 +39,16 @@ public class PositionLabel : MonoBehaviour
 	
 	public void On_TouchStart(Gesture gesture)
 	{
-		if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
+		if (gesture.pickObject == gameObject && CaptureIndicatorEnabled)
+		{
+			CheckerContainer checkerContainerScript = gameController.CheckerOfInterest.GetComponent<CheckerContainer>();
+			gameController.ClearPositionLabels();
+			gameController.ResetOccupationValue(checkerContainerScript.BoardLocation);
+			OccupationValue = checkerContainerScript.PieceColor;
+			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
+			// Capture opponent checker....
+		}
+		else if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
 		{
 			CheckerContainer checkerContainerScript = gameController.CheckerOfInterest.GetComponent<CheckerContainer>();
 			gameController.ClearPositionLabels();
