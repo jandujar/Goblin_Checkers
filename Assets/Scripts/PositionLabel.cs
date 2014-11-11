@@ -12,10 +12,12 @@ public class PositionLabel : MonoBehaviour
 	int occupationValue = 0; // 0 = Empty, 1 = White, 2 = Red
 	bool moveIndicatorEnabled = false;
 	bool captureIndicatorEnabled = false;
+	CheckerContainer occupyingChecker;
 	public int PositionValue { get { return positionValue; }}
 	public int OccupationValue { get { return occupationValue; } set { occupationValue = value; }}
 	public bool MoveIndicatorEnabled { get { return moveIndicatorEnabled; } set { moveIndicatorEnabled = value; }}
 	public bool CaptureIndicatorEnabled { get { return captureIndicatorEnabled; } set { captureIndicatorEnabled = value; }}
+	public CheckerContainer OccupyingChecker { get { return occupyingChecker; } set { occupyingChecker = value; }}
 
 	void OnEnable()
 	{
@@ -44,15 +46,21 @@ public class PositionLabel : MonoBehaviour
 			CheckerContainer checkerContainerScript = gameController.CheckerOfInterest.GetComponent<CheckerContainer>();
 			gameController.ClearPositionLabels();
 			gameController.ResetOccupationValue(checkerContainerScript.BoardLocation);
+
+			CheckerContainer captureContainerScript = gameController.CaptureObject.GetComponent<CheckerContainer>();
+			gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
+
+			OccupyingChecker = checkerContainerScript;
 			OccupationValue = checkerContainerScript.PieceColor;
 			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
-			// Capture opponent checker....
+			Destroy(gameController.CaptureObject, 1.0f);
 		}
 		else if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
 		{
 			CheckerContainer checkerContainerScript = gameController.CheckerOfInterest.GetComponent<CheckerContainer>();
 			gameController.ClearPositionLabels();
 			gameController.ResetOccupationValue(checkerContainerScript.BoardLocation);
+			OccupyingChecker = checkerContainerScript;
 			OccupationValue = checkerContainerScript.PieceColor;
 			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
 		}

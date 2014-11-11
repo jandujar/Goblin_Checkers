@@ -20,6 +20,7 @@ public class BoardSetup : MonoBehaviour
 			whiteSpawnCount++;
 
 			CheckerContainer checkerContainerScript = clone.GetComponent<CheckerContainer>();
+			whiteStartPosition.OccupyingChecker = checkerContainerScript;
 			checkerContainerScript.BoardLocation = whiteStartPosition.PositionValue;
 		}
 
@@ -31,6 +32,7 @@ public class BoardSetup : MonoBehaviour
 			redSpawnCount++;
 
 			CheckerContainer checkerContainerScript = clone.GetComponent<CheckerContainer>();
+			redStartPosition.OccupyingChecker = checkerContainerScript;
 			checkerContainerScript.BoardLocation = redStartPosition.PositionValue;
 		}
 	}
