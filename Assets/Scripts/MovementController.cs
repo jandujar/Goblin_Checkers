@@ -36,8 +36,9 @@ public class MovementController : MonoBehaviour
 					gameController.WhiteTurn = false;
 				else
 					gameController.WhiteTurn = true;
-			}
 
+				gameController.FindCaptures();
+			}
 		}
 	}
 }

@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
 	GameObject checkerOfInterest;
 	bool whiteTurn;
 	bool canCapture = false;
+	bool capturePrecheck = false;
+	bool captureRequired = false;
 	GameObject captureObject;
 	PositionLabel potentialMoveLabel;
 	CheckerContainer checkerContainerScript;
@@ -33,6 +35,57 @@ public class GameController : MonoBehaviour
 		}
 
 		canCapture = false;
+	}
+
+	public void FindCaptures()
+	{
+		capturePrecheck = true;
+		captureRequired = false;
+
+		if (WhiteTurn)
+		{
+			GameObject[] whiteCheckers = GameObject.FindGameObjectsWithTag("White");
+
+			if (whiteCheckers != null)
+			{
+				foreach (GameObject whiteChecker in whiteCheckers)
+				{
+					checkerContainerScript = whiteChecker.GetComponent<CheckerContainer>();
+					checkerPosition = checkerContainerScript.BoardLocation;
+
+					if (checkerContainerScript.PieceColor == 1)
+					{
+						CheckUpLeftCapture();
+						CheckUpRightCapture();
+					}
+					else
+						CheckAllCapture();
+				}
+			}
+		}
+		else
+		{
+			GameObject[] redCheckers = GameObject.FindGameObjectsWithTag("Red");
+			
+			if (redCheckers != null)
+			{
+				foreach (GameObject redChecker in redCheckers)
+				{
+					checkerContainerScript = redChecker.GetComponent<CheckerContainer>();
+					checkerPosition = checkerContainerScript.BoardLocation;
+					
+					if (checkerContainerScript.PieceColor == 2)
+					{
+						CheckDownLeftCapture();
+						CheckDownRightCapture();
+					}
+					else
+						CheckAllCapture();
+				}
+			}
+		}
+
+		capturePrecheck = false;
 	}
 
 	public void FindSelectedCheckerOptions(GameObject selectedChecker)
@@ -71,7 +124,7 @@ public class GameController : MonoBehaviour
 		else if (checkerContainerScript.PieceType == 2)
 			CheckAllCapture();
 
-		if (!canCapture)
+		if (!captureRequired && !canCapture)
 		{
 			if (checkerContainerScript.PieceType == 1)
 			{
@@ -89,6 +142,8 @@ public class GameController : MonoBehaviour
 			else if (checkerContainerScript.PieceType == 2)
 				CheckAllMove();
 		}
+		else if (captureRequired && !canCapture)
+			Debug.Log("Capture Required");
 	}
 
 	void CheckUpLeftMove()
@@ -131,8 +186,12 @@ public class GameController : MonoBehaviour
 						if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 						{
 							canCapture = true;
-							potentialMoveLabel.EnableCaptureIndicator();
+							captureRequired = true;
 							CaptureObject = potentialObject;
+
+							if (!capturePrecheck)
+								potentialMoveLabel.EnableCaptureIndicator();
+
 						}
 					}
 				}
@@ -152,8 +211,11 @@ public class GameController : MonoBehaviour
 						if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 						{
 							canCapture = true;
-							potentialMoveLabel.EnableCaptureIndicator();
+							captureRequired = true;
 							CaptureObject = potentialObject;
+							
+							if (!capturePrecheck)
+								potentialMoveLabel.EnableCaptureIndicator();
 						}
 					}
 				}
@@ -196,8 +258,11 @@ public class GameController : MonoBehaviour
 					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 					{
 						canCapture = true;
-						potentialMoveLabel.EnableCaptureIndicator();
+						captureRequired = true;
 						CaptureObject = potentialObject;
+						
+						if (!capturePrecheck)
+							potentialMoveLabel.EnableCaptureIndicator();
 					}
 				}
 			}
@@ -217,8 +282,11 @@ public class GameController : MonoBehaviour
 					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 					{
 						canCapture = true;
-						potentialMoveLabel.EnableCaptureIndicator();
+						captureRequired = true;
 						CaptureObject = potentialObject;
+						
+						if (!capturePrecheck)
+							potentialMoveLabel.EnableCaptureIndicator();
 					}
 				}
 			}
@@ -260,8 +328,11 @@ public class GameController : MonoBehaviour
 					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 					{
 						canCapture = true;
-						potentialMoveLabel.EnableCaptureIndicator();
+						captureRequired = true;
 						CaptureObject = potentialObject;
+						
+						if (!capturePrecheck)
+							potentialMoveLabel.EnableCaptureIndicator();
 					}
 				}
 			}
@@ -281,8 +352,11 @@ public class GameController : MonoBehaviour
 					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 					{
 						canCapture = true;
-						potentialMoveLabel.EnableCaptureIndicator();
+						captureRequired = true;
 						CaptureObject = potentialObject;
+						
+						if (!capturePrecheck)
+							potentialMoveLabel.EnableCaptureIndicator();
 					}
 				}
 			}
@@ -324,8 +398,11 @@ public class GameController : MonoBehaviour
 					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 					{
 						canCapture = true;
-						potentialMoveLabel.EnableCaptureIndicator();
+						captureRequired = true;
 						CaptureObject = potentialObject;
+						
+						if (!capturePrecheck)
+							potentialMoveLabel.EnableCaptureIndicator();
 					}
 				}
 			}
@@ -345,8 +422,11 @@ public class GameController : MonoBehaviour
 					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 					{
 						canCapture = true;
-						potentialMoveLabel.EnableCaptureIndicator();
+						captureRequired = true;
 						CaptureObject = potentialObject;
+						
+						if (!capturePrecheck)
+							potentialMoveLabel.EnableCaptureIndicator();
 					}
 				}
 			}
