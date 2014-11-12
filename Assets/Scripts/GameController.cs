@@ -15,7 +15,10 @@ public class GameController : MonoBehaviour
 	[SerializeField] int[] downRightCaptureExclusions;
 	GameObject checkerOfInterest;
 	bool whiteTurn;
-	bool canCapture = false;
+	bool canCaptureUL = false;
+	bool canCaptureUR = false;
+	bool canCaptureDL = false;
+	bool canCaptureDR = false;
 	bool capturePrecheck = false;
 	bool captureRequired = false;
 	bool capturePerformed = false;
@@ -26,7 +29,10 @@ public class GameController : MonoBehaviour
 	public GameObject CheckerOfInterest { get { return checkerOfInterest; } set { checkerOfInterest = value; }}
 	public bool WhiteTurn { get { return whiteTurn; } set { whiteTurn = value; }}
 	public GameObject CaptureObject { get { return captureObject; } set { captureObject = value; }}
-	public bool CanCapture { get { return canCapture; }}
+	public bool CanCaptureUL { get { return canCaptureUL; }}
+	public bool CanCaptureUR { get { return canCaptureUR; }}
+	public bool CanCaptureDL { get { return canCaptureDL; }}
+	public bool CanCaptureDR { get { return canCaptureDR; }}
 	public bool CapturePerformed { get { return capturePerformed; } set { capturePerformed = value; }}
 
 	void Start()
@@ -45,7 +51,10 @@ public class GameController : MonoBehaviour
 			positionLabel.DisableCaptureIndicator();
 		}
 
-		canCapture = false;
+		canCaptureUL = false;
+		canCaptureUR = false;
+		canCaptureDL = false;
+		canCaptureDR = false;
 	}
 
 	public void FindCaptures()
@@ -103,7 +112,10 @@ public class GameController : MonoBehaviour
 	{
 		CheckerOfInterest = selectedChecker;
 		checkerContainerScript = selectedChecker.GetComponent<CheckerContainer>();
-		canCapture = false;
+		canCaptureUL = false;
+		canCaptureUR = false;
+		canCaptureDL = false;
+		canCaptureDR = false;
 
 		if (checkerContainerScript.PieceColor == 1 && WhiteTurn)
 		{
@@ -135,7 +147,7 @@ public class GameController : MonoBehaviour
 		else if (checkerContainerScript.PieceType == 2)
 			CheckAllCapture();
 
-		if (!captureRequired && !CanCapture)
+		if (!captureRequired && !canCaptureUL && !canCaptureUR && !canCaptureDL && !canCaptureDR)
 		{
 			if (checkerContainerScript.PieceType == 1)
 			{
@@ -153,7 +165,7 @@ public class GameController : MonoBehaviour
 			else if (checkerContainerScript.PieceType == 2)
 				CheckAllMove();
 		}
-		else if (captureRequired && !CanCapture)
+		else if (captureRequired && !canCaptureUL && !canCaptureUR && !canCaptureDL && !canCaptureDR)
 			Debug.Log("Capture Required");
 	}
 
@@ -200,7 +212,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureUL = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 
@@ -208,7 +220,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureUL = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
@@ -222,7 +234,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureUL = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 					
@@ -230,7 +242,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureUL = false;
 			}
 		}
 	}
@@ -278,7 +290,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureUR = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 					
@@ -286,7 +298,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureUR = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
@@ -300,7 +312,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureUR = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 					
@@ -308,7 +320,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureUR = false;
 			}
 		}
 	}
@@ -356,7 +368,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureDL = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 					
@@ -364,7 +376,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureDL = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
@@ -378,7 +390,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureDL = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 					
@@ -386,7 +398,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureDL = false;
 			}
 		}
 	}
@@ -434,7 +446,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureDR = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 					
@@ -442,7 +454,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureDR = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
@@ -456,7 +468,7 @@ public class GameController : MonoBehaviour
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					canCapture = true;
+					canCaptureDR = true;
 					captureRequired = true;
 					CaptureObject = potentialObject;
 					
@@ -464,7 +476,7 @@ public class GameController : MonoBehaviour
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
 				else
-					canCapture = false;
+					canCaptureDR = false;
 			}
 		}
 	}
