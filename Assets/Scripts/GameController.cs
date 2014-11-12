@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
 	bool canCapture = false;
 	bool capturePrecheck = false;
 	bool captureRequired = false;
+	bool capturePerformed = false;
 	GameObject captureObject;
 	PositionLabel potentialMoveLabel;
 	CheckerContainer checkerContainerScript;
@@ -26,6 +27,7 @@ public class GameController : MonoBehaviour
 	public bool WhiteTurn { get { return whiteTurn; } set { whiteTurn = value; }}
 	public GameObject CaptureObject { get { return captureObject; } set { captureObject = value; }}
 	public bool CanCapture { get { return canCapture; }}
+	public bool CapturePerformed { get { return capturePerformed; } set { capturePerformed = value; }}
 
 	void Start()
 	{
@@ -204,8 +206,9 @@ public class GameController : MonoBehaviour
 
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
-
 				}
+				else
+					canCapture = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
@@ -226,6 +229,8 @@ public class GameController : MonoBehaviour
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
+				else
+					canCapture = false;
 			}
 		}
 	}
@@ -280,6 +285,8 @@ public class GameController : MonoBehaviour
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
+				else
+					canCapture = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
@@ -300,6 +307,8 @@ public class GameController : MonoBehaviour
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
+				else
+					canCapture = false;
 			}
 		}
 	}
@@ -354,6 +363,8 @@ public class GameController : MonoBehaviour
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
+				else
+					canCapture = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
@@ -374,6 +385,8 @@ public class GameController : MonoBehaviour
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
+				else
+					canCapture = false;
 			}
 		}
 	}
@@ -428,6 +441,8 @@ public class GameController : MonoBehaviour
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
+				else
+					canCapture = false;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
@@ -448,6 +463,8 @@ public class GameController : MonoBehaviour
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 				}
+				else
+					canCapture = false;
 			}
 		}
 	}

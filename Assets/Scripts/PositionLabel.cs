@@ -50,6 +50,7 @@ public class PositionLabel : MonoBehaviour
 			CheckerContainer captureContainerScript = gameController.CaptureObject.GetComponent<CheckerContainer>();
 			gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
 
+			gameController.CapturePerformed = true;
 			OccupyingChecker = checkerContainerScript;
 			OccupationValue = checkerContainerScript.PieceColor;
 			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
@@ -57,6 +58,7 @@ public class PositionLabel : MonoBehaviour
 		}
 		else if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
 		{
+			gameController.CapturePerformed = false;
 			CheckerContainer checkerContainerScript = gameController.CheckerOfInterest.GetComponent<CheckerContainer>();
 			gameController.ClearPositionLabels();
 			gameController.ResetOccupationValue(checkerContainerScript.BoardLocation);
