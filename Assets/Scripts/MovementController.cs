@@ -32,12 +32,17 @@ public class MovementController : MonoBehaviour
 				checkerObject.transform.position = newTransform.position;
 				enableMovement = false;
 
-				if (gameController.WhiteTurn)
-					gameController.WhiteTurn = false;
-				else
-					gameController.WhiteTurn = true;
+				if (!gameController.CanCapture)
+				{
+					if (gameController.WhiteTurn)
+						gameController.WhiteTurn = false;
+					else
+						gameController.WhiteTurn = true;
 
-				gameController.FindCaptures();
+					gameController.FindCaptures();
+				}
+				else
+					gameController.FindCaptures();
 			}
 		}
 	}

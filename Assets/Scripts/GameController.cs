@@ -5,6 +5,14 @@ public class GameController : MonoBehaviour
 {
 	[SerializeField] bool whiteStart = true;
 	[SerializeField] PositionLabel[] positionLabels;
+	[SerializeField] int[] upLeftMoveExclusions;
+	[SerializeField] int[] upRightMoveExclusions;
+	[SerializeField] int[] downLeftMoveExclusions;
+	[SerializeField] int[] downRightMoveExclusions;
+	[SerializeField] int[] upLeftCaptureExclusions;
+	[SerializeField] int[] upRightCaptureExclusions;
+	[SerializeField] int[] downLeftCaptureExclusions;
+	[SerializeField] int[] downRightCaptureExclusions;
 	GameObject checkerOfInterest;
 	bool whiteTurn;
 	bool canCapture = false;
@@ -17,6 +25,7 @@ public class GameController : MonoBehaviour
 	public GameObject CheckerOfInterest { get { return checkerOfInterest; } set { checkerOfInterest = value; }}
 	public bool WhiteTurn { get { return whiteTurn; } set { whiteTurn = value; }}
 	public GameObject CaptureObject { get { return captureObject; } set { captureObject = value; }}
+	public bool CanCapture { get { return canCapture; }}
 
 	void Start()
 	{
@@ -124,7 +133,7 @@ public class GameController : MonoBehaviour
 		else if (checkerContainerScript.PieceType == 2)
 			CheckAllCapture();
 
-		if (!captureRequired && !canCapture)
+		if (!captureRequired && !CanCapture)
 		{
 			if (checkerContainerScript.PieceType == 1)
 			{
@@ -142,82 +151,80 @@ public class GameController : MonoBehaviour
 			else if (checkerContainerScript.PieceType == 2)
 				CheckAllMove();
 		}
-		else if (captureRequired && !canCapture)
+		else if (captureRequired && !CanCapture)
 			Debug.Log("Capture Required");
 	}
 
 	void CheckUpLeftMove()
 	{
-		if(checkerPosition != 1)
+		foreach (int exclusionNumber in upLeftMoveExclusions)
 		{
-			if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
-			{
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionLabel>();
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
 
-				if ((checkerPosition - 1) % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
-					potentialMoveLabel.EnableMoveIndicator();
-			}
-			else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
-			{
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
+		{
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionLabel>();
 
-				if ((checkerPosition - 1) % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
-					potentialMoveLabel.EnableMoveIndicator();
-			}
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+				potentialMoveLabel.EnableMoveIndicator();
+		}
+		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
+		{
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
 
 	void CheckUpLeftCapture()
 	{
-		if(checkerPosition != 1)
+		foreach (int exclusionNumber in upLeftCaptureExclusions)
 		{
-			if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
+
+		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
+		{
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionLabel>();
+
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionLabel>();
-
-				if ((checkerPosition - 1) % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionLabel>();
+				
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-					
-					if ((checkerPosition - 1) + 7 < positionLabels.Length)
-					{
-						potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionLabel>();
-						
-						if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-						{
-							canCapture = true;
-							captureRequired = true;
-							CaptureObject = potentialObject;
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 
-							if (!capturePrecheck)
-								potentialMoveLabel.EnableCaptureIndicator();
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 
-						}
-					}
 				}
 			}
-			else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
-			{
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+		}
+		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
+		{
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
 
-				if ((checkerPosition - 1) % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			{
+				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionLabel>();
+				
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 					
-					if ((checkerPosition - 1) + 7 < positionLabels.Length)
-					{
-						potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionLabel>();
-						
-						if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-						{
-							canCapture = true;
-							captureRequired = true;
-							CaptureObject = potentialObject;
-							
-							if (!capturePrecheck)
-								potentialMoveLabel.EnableCaptureIndicator();
-						}
-					}
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 				}
 			}
 		}
@@ -225,45 +232,53 @@ public class GameController : MonoBehaviour
 
 	void CheckUpRightMove()
 	{
+		foreach (int exclusionNumber in upRightMoveExclusions)
+		{
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
+
 		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
 
-			if (checkerPosition % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionLabel>();
 
-			if (checkerPosition % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
 
 	void CheckUpRightCapture()
 	{
+		foreach (int exclusionNumber in upRightCaptureExclusions)
+		{
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
+
 		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
 
-			if (checkerPosition % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionLabel>();
 				
-				if ((checkerPosition - 1) + 9 < positionLabels.Length)
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionLabel>();
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 					
-					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-					{
-						canCapture = true;
-						captureRequired = true;
-						CaptureObject = potentialObject;
-						
-						if (!capturePrecheck)
-							potentialMoveLabel.EnableCaptureIndicator();
-					}
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 				}
 			}
 		}
@@ -271,23 +286,19 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionLabel>();
 
-			if ((checkerPosition - 1) % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionLabel>();
 				
-				if ((checkerPosition - 1) + 9 < positionLabels.Length)
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionLabel>();
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 					
-					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-					{
-						canCapture = true;
-						captureRequired = true;
-						CaptureObject = potentialObject;
-						
-						if (!capturePrecheck)
-							potentialMoveLabel.EnableCaptureIndicator();
-					}
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 				}
 			}
 		}
@@ -295,45 +306,53 @@ public class GameController : MonoBehaviour
 
 	void CheckDownLeftMove()
 	{
+		foreach (int exclusionNumber in downLeftMoveExclusions)
+		{
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
+
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 5].GetComponent<PositionLabel>();
 
-			if ((checkerPosition - 1) % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
 
-			if ((checkerPosition - 1) % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
 
 	void CheckDownLeftCapture()
 	{
+		foreach (int exclusionNumber in downLeftCaptureExclusions)
+		{
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
+
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 5].GetComponent<PositionLabel>();
 
-			if ((checkerPosition - 1) % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionLabel>();
 				
-				if ((checkerPosition - 1) - 9 > 0)
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionLabel>();
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 					
-					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-					{
-						canCapture = true;
-						captureRequired = true;
-						CaptureObject = potentialObject;
-						
-						if (!capturePrecheck)
-							potentialMoveLabel.EnableCaptureIndicator();
-					}
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 				}
 			}
 		}
@@ -341,23 +360,19 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
 
-			if ((checkerPosition - 1) % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionLabel>();
 				
-				if ((checkerPosition - 1) - 9 > 0)
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionLabel>();
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 					
-					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-					{
-						canCapture = true;
-						captureRequired = true;
-						CaptureObject = potentialObject;
-						
-						if (!capturePrecheck)
-							potentialMoveLabel.EnableCaptureIndicator();
-					}
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 				}
 			}
 		}
@@ -365,6 +380,12 @@ public class GameController : MonoBehaviour
 	
 	void CheckDownRightMove()
 	{
+		foreach (int exclusionNumber in downRightMoveExclusions)
+		{
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
+
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
@@ -376,34 +397,36 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 3].GetComponent<PositionLabel>();
 
-			if (checkerPosition % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
 
 	void CheckDownRightCapture()
 	{
+		foreach (int exclusionNumber in downRightCaptureExclusions)
+		{
+			if (exclusionNumber == checkerPosition)
+				return;
+		}
+
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
 
-			if (checkerPosition % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionLabel>();
 				
-				if ((checkerPosition - 1) - 7 > 0)
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionLabel>();
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 					
-					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-					{
-						canCapture = true;
-						captureRequired = true;
-						CaptureObject = potentialObject;
-						
-						if (!capturePrecheck)
-							potentialMoveLabel.EnableCaptureIndicator();
-					}
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 				}
 			}
 		}
@@ -411,23 +434,19 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 3].GetComponent<PositionLabel>();
 
-			if (checkerPosition % 4 != 0 && potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
+			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionLabel>();
 				
-				if ((checkerPosition - 1) - 7 > 0)
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
-					potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionLabel>();
+					canCapture = true;
+					captureRequired = true;
+					CaptureObject = potentialObject;
 					
-					if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
-					{
-						canCapture = true;
-						captureRequired = true;
-						CaptureObject = potentialObject;
-						
-						if (!capturePrecheck)
-							potentialMoveLabel.EnableCaptureIndicator();
-					}
+					if (!capturePrecheck)
+						potentialMoveLabel.EnableCaptureIndicator();
 				}
 			}
 		}
