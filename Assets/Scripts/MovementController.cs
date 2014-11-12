@@ -34,11 +34,11 @@ public class MovementController : MonoBehaviour
 
 				if (gameController.CapturePerformed)
 				{
-					gameController.FindCaptures();
+					gameController.FindAdditionalCaptures(checkerObject);
 
-					if (gameController.CanCaptureUL || gameController.CanCaptureUR || gameController.CanCaptureDL || gameController.CanCaptureDR)
-						gameController.FindSelectedCheckerOptions(gameController.CheckerOfInterest);
-					else
+					if (gameController.CanRecapture)
+						gameController.FindCaptures();
+					else if (!gameController.RecaptureCheck)
 					{
 						if (gameController.WhiteTurn)
 							gameController.WhiteTurn = false;
@@ -46,7 +46,7 @@ public class MovementController : MonoBehaviour
 							gameController.WhiteTurn = true;
 					}
 				}
-				else if (!gameController.CapturePerformed || (!gameController.CanCaptureUL && !gameController.CanCaptureUR && !gameController.CanCaptureDL && !gameController.CanCaptureDR))
+				else if (!gameController.RecaptureCheck || !gameController.CapturePerformed || (!gameController.CanCaptureUL && !gameController.CanCaptureUR && !gameController.CanCaptureDL && !gameController.CanCaptureDR))
 				{
 					if (gameController.WhiteTurn)
 						gameController.WhiteTurn = false;
