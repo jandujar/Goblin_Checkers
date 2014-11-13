@@ -34,7 +34,7 @@ public class MovementController : MonoBehaviour
 				checkerObject.transform.position = newTransform.position;
 				enableMovement = false;
 
-				if (gameController.CapturePerformed)
+				if (!gameController.GameOver && gameController.CapturePerformed)
 				{
 					gameController.FindAdditionalCaptures(checkerObject);
 
@@ -54,7 +54,7 @@ public class MovementController : MonoBehaviour
 						}
 					}
 				}
-				else if (!gameController.RecaptureCheck || !gameController.CapturePerformed || (!gameController.CanCaptureUL && !gameController.CanCaptureUR && !gameController.CanCaptureDL && !gameController.CanCaptureDR))
+				else if (!gameController.GameOver && (!gameController.RecaptureCheck || !gameController.CapturePerformed || (!gameController.CanCaptureUL && !gameController.CanCaptureUR && !gameController.CanCaptureDL && !gameController.CanCaptureDR)))
 				{
 					if (gameController.WhiteTurn)
 					{

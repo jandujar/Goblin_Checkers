@@ -3,16 +3,20 @@ using System.Collections;
 
 public class BoardSetup : MonoBehaviour
 {
+	[SerializeField] GameController gameController;
 	[SerializeField] GameObject whitePrefab;
 	[SerializeField] GameObject redPrefab;
-	[SerializeField] PositionLabel[] whiteStartPositions;
-	[SerializeField] PositionLabel[] redStartPositions;
+	[SerializeField] PositionContainer[] whiteStartPositions;
+	[SerializeField] PositionContainer[] redStartPositions;
 	int whiteSpawnCount = 1;
 	int redSpawnCount = 1;
 
 	void Start ()
 	{
-		foreach (PositionLabel whiteStartPosition in whiteStartPositions)
+		gameController.whiteCheckers.Clear();
+		gameController.redCheckers.Clear();
+
+		foreach (PositionContainer whiteStartPosition in whiteStartPositions)
 		{
 			whiteStartPosition.OccupationValue = 1;
 			var clone = Instantiate(whitePrefab, whiteStartPosition.transform.position, whiteStartPosition.transform.rotation) as GameObject;
@@ -22,9 +26,11 @@ public class BoardSetup : MonoBehaviour
 			CheckerContainer checkerContainerScript = clone.GetComponent<CheckerContainer>();
 			whiteStartPosition.OccupyingChecker = checkerContainerScript;
 			checkerContainerScript.BoardLocation = whiteStartPosition.PositionValue;
+
+			gameController.whiteCheckers.Add(clone);
 		}
 
-		foreach (PositionLabel redStartPosition in redStartPositions)
+		foreach (PositionContainer redStartPosition in redStartPositions)
 		{
 			redStartPosition.OccupationValue = 2;
 			var clone = Instantiate(redPrefab, redStartPosition.transform.position, redStartPosition.transform.rotation) as GameObject;
@@ -34,6 +40,10 @@ public class BoardSetup : MonoBehaviour
 			CheckerContainer checkerContainerScript = clone.GetComponent<CheckerContainer>();
 			redStartPosition.OccupyingChecker = checkerContainerScript;
 			checkerContainerScript.BoardLocation = redStartPosition.PositionValue;
+
+			gameController.redCheckers.Add(clone);
 		}
+
+		gameController.CheckerCounter.text = "White: " + gameController.whiteCheckers.Count + " Red: " + gameController.redCheckers.Count;
 	}
 }

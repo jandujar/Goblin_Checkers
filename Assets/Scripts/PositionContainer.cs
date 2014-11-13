@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PositionLabel : MonoBehaviour
+public class PositionContainer : MonoBehaviour
 {
 	[SerializeField] GameController gameController;
 	[SerializeField] MovementController movementController;
@@ -76,6 +76,11 @@ public class PositionLabel : MonoBehaviour
 			OccupationValue = checkerContainerScript.PieceColor;
 			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
 
+			if (captureContainerScript.PieceColor == 1)
+				gameController.whiteCheckers.Remove(captureContainerScript.gameObject);
+			else
+				gameController.redCheckers.Remove(captureContainerScript.gameObject);
+
 			if (MoveDirection == "UL")
 				Destroy(gameController.CaptureObjectUL, 1.0f);
 			else if (MoveDirection == "UR")
@@ -86,6 +91,19 @@ public class PositionLabel : MonoBehaviour
 				Destroy(gameController.CaptureObjectDR, 1.0f);
 			else
 				Debug.LogError("MoveDirection is null");
+
+			gameController.CheckerCounter.text = "White: " + gameController.whiteCheckers.Count + " Red: " + gameController.redCheckers.Count;
+
+			if (gameController.whiteCheckers.Count == 0)
+			{
+				gameController.InformationText.text = "Game Over: Red Wins";
+				gameController.GameOver = true;
+			}
+			else if (gameController.redCheckers.Count == 0)
+			{
+				gameController.InformationText.text = "Game Over: White Wins";
+				gameController.GameOver = true;
+			}
 		}
 		else if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
 		{

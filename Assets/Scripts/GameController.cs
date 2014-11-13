@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
 	[SerializeField] UILabel informationText;
-	[SerializeField] PositionLabel[] positionLabels;
+	[SerializeField] UILabel checkerCounter;
+	[SerializeField] PositionContainer[] positionLabels;
 	[SerializeField] int[] upLeftMoveExclusions;
 	[SerializeField] int[] upRightMoveExclusions;
 	[SerializeField] int[] downLeftMoveExclusions;
@@ -28,9 +30,10 @@ public class GameController : MonoBehaviour
 	GameObject captureObjectUR;
 	GameObject captureObjectDL;
 	GameObject captureObjectDR;
-	PositionLabel potentialMoveLabel;
+	PositionContainer potentialMoveLabel;
 	CheckerContainer checkerContainerScript;
 	int checkerPosition;
+	bool gameOver = false;
 	public GameObject CheckerOfInterest { get { return checkerOfInterest; } set { checkerOfInterest = value; }}
 	public bool WhiteTurn { get { return whiteTurn; } set { whiteTurn = value; }}
 	public bool CanCaptureUL { get { return canCaptureUL; }}
@@ -44,6 +47,11 @@ public class GameController : MonoBehaviour
 	public bool CapturePerformed { get { return capturePerformed; } set { capturePerformed = value; }}
 	public bool RecaptureCheck { get { return recaptureCheck; }}
 	public bool CanRecapture { get { return canRecapture; }}
+	public List<GameObject> whiteCheckers = new List<GameObject>();
+	public List<GameObject> redCheckers = new List<GameObject>();
+	public UILabel InformationText { get { return informationText; } set { informationText = value; }}
+	public UILabel CheckerCounter { get { return checkerCounter; } set { checkerCounter = value; }}
+	public bool GameOver { get { return gameOver; } set { gameOver = value; }}
 
 	void Start()
 	{
@@ -57,18 +65,18 @@ public class GameController : MonoBehaviour
 		if (WhiteTurn)
 		{
 			whiteTurn = true;
-			informationText.text = "White Turn";
+			InformationText.text = "White Turn";
 		}
 		else
 		{
 			whiteTurn = false;
-			informationText.text = "Red Turn";
+			InformationText.text = "Red Turn";
 		}
 	}
 
 	public void ClearPositionLabels()
 	{
-		foreach (PositionLabel positionLabel in positionLabels)
+		foreach (PositionContainer positionLabel in positionLabels)
 		{
 			positionLabel.DisableMoveIndicator();
 			positionLabel.DisableCaptureIndicator();
@@ -218,9 +226,9 @@ public class GameController : MonoBehaviour
 		else if (captureRequired && !canCaptureUL && !canCaptureUR && !canCaptureDL && !canCaptureDR)
 		{
 			if (WhiteTurn)
-				informationText.text = "White Turn: Capture Required";
+				InformationText.text = "White Turn: Capture Required";
 			else
-				informationText.text = "Red Turn: Capture Required";
+				InformationText.text = "Red Turn: Capture Required";
 		}
 	}
 
@@ -234,14 +242,14 @@ public class GameController : MonoBehaviour
 
 		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
@@ -258,12 +266,12 @@ public class GameController : MonoBehaviour
 
 		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
@@ -287,12 +295,12 @@ public class GameController : MonoBehaviour
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 7].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
@@ -328,14 +336,14 @@ public class GameController : MonoBehaviour
 
 		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
@@ -352,12 +360,12 @@ public class GameController : MonoBehaviour
 
 		if (checkerPosition < 5 || (checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
@@ -383,12 +391,12 @@ public class GameController : MonoBehaviour
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) + 9].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
@@ -424,14 +432,14 @@ public class GameController : MonoBehaviour
 
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 5].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 5].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
@@ -448,12 +456,12 @@ public class GameController : MonoBehaviour
 
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 5].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 5].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
@@ -479,12 +487,12 @@ public class GameController : MonoBehaviour
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
@@ -520,14 +528,14 @@ public class GameController : MonoBehaviour
 
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionContainer>();
 
 			if (checkerPosition % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 3].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 3].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
 				potentialMoveLabel.EnableMoveIndicator();
@@ -544,12 +552,12 @@ public class GameController : MonoBehaviour
 
 		if ((checkerPosition >= 9 && checkerPosition < 13) || (checkerPosition >= 17 && checkerPosition < 21) || (checkerPosition >= 25 && checkerPosition < 29))
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
@@ -575,12 +583,12 @@ public class GameController : MonoBehaviour
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
 		{
-			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 3].GetComponent<PositionLabel>();
+			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 3].GetComponent<PositionContainer>();
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
-				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionLabel>();
+				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 7].GetComponent<PositionContainer>();
 				
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
