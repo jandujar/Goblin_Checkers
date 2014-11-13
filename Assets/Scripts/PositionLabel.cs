@@ -84,6 +84,19 @@ public class PositionLabel : MonoBehaviour
 				Destroy(gameController.CaptureObjectDL, 1.0f);
 			else if (MoveDirection == "DR")
 				Destroy(gameController.CaptureObjectDR, 1.0f);
+			else
+				Debug.LogError("MoveDirection is null");
+
+			if (PositionValue <= 4 && checkerContainerScript.PieceColor == 1 && checkerContainerScript.PieceType != 2)
+			{
+				checkerContainerScript.PieceType = 2;
+				Debug.Log("White Checker Kinged");
+			}
+			else if (PositionValue >= 29 && checkerContainerScript.PieceColor == 2 && checkerContainerScript.PieceType != 2)
+			{
+				checkerContainerScript.PieceType = 2;
+				Debug.Log("Red Checker Kinged");
+			}
 		}
 		else if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
 		{
@@ -94,6 +107,17 @@ public class PositionLabel : MonoBehaviour
 			OccupyingChecker = checkerContainerScript;
 			OccupationValue = checkerContainerScript.PieceColor;
 			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
+
+			if (PositionValue >= 29 && checkerContainerScript.PieceColor == 1 && checkerContainerScript.PieceType != 2)
+			{
+				checkerContainerScript.PieceType = 2;
+				Debug.Log("White Checker Kinged");
+			}
+			else if (PositionValue <= 4 && checkerContainerScript.PieceColor == 2 && checkerContainerScript.PieceType != 2)
+			{
+				checkerContainerScript.PieceType = 2;
+				Debug.Log("Red Checker Kinged");
+			}
 		}
 	}
 
