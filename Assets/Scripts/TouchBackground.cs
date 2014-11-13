@@ -35,7 +35,7 @@ public class TouchBackground : MonoBehaviour
 	
 	public void On_TouchStart(Gesture gesture)
 	{
-		if (gesture.pickObject == gameObject)
+		if (gesture.pickObject == gameObject && !gameController.CanRecapture)
 			gameController.ClearPositionLabels();
 	}
 }

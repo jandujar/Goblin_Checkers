@@ -5,6 +5,7 @@ public class MovementController : MonoBehaviour
 {
 	[SerializeField] UILabel informationText;
 	[SerializeField] GameController gameController;
+	CheckerContainer checkerContainerScript;
 	bool enableMovement = false;
 	GameObject checkerObject;
 	Transform newTransform;
@@ -25,7 +26,7 @@ public class MovementController : MonoBehaviour
 			if (Vector3.Distance(checkerObject.transform.position, newTransform.position) > 0.001f)
 			{
 				checkerObject.transform.position = Vector3.Lerp(checkerObject.transform.position, newTransform.position, Time.deltaTime * 4f);
-				CheckerContainer checkerContainerScript = checkerObject.GetComponent<CheckerContainer>();
+				checkerContainerScript = checkerObject.GetComponent<CheckerContainer>();
 				checkerContainerScript.BoardLocation = positionValue;
 			}
 			else
@@ -68,6 +69,17 @@ public class MovementController : MonoBehaviour
 				}
 
 				gameController.FindCaptures();
+
+				if (checkerContainerScript.BoardLocation >= 29 && checkerContainerScript.PieceColor == 1 && checkerContainerScript.PieceType != 2)
+				{
+					checkerContainerScript.PieceType = 2;
+					Debug.Log("White Checker Kinged");
+				}
+				else if (checkerContainerScript.BoardLocation <= 4 && checkerContainerScript.PieceColor == 2 && checkerContainerScript.PieceType != 2)
+				{
+					checkerContainerScript.PieceType = 2;
+					Debug.Log("Red Checker Kinged");
+				}
 			}
 		}
 	}
