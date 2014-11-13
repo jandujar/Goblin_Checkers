@@ -24,17 +24,23 @@ public class GameController : MonoBehaviour
 	bool capturePerformed = false;
 	bool recaptureCheck = false;
 	bool canRecapture = false;
-	GameObject captureObject;
+	GameObject captureObjectUL;
+	GameObject captureObjectUR;
+	GameObject captureObjectDL;
+	GameObject captureObjectDR;
 	PositionLabel potentialMoveLabel;
 	CheckerContainer checkerContainerScript;
 	int checkerPosition;
 	public GameObject CheckerOfInterest { get { return checkerOfInterest; } set { checkerOfInterest = value; }}
 	public bool WhiteTurn { get { return whiteTurn; } set { whiteTurn = value; }}
-	public GameObject CaptureObject { get { return captureObject; } set { captureObject = value; }}
 	public bool CanCaptureUL { get { return canCaptureUL; }}
 	public bool CanCaptureUR { get { return canCaptureUR; }}
 	public bool CanCaptureDL { get { return canCaptureDL; }}
 	public bool CanCaptureDR { get { return canCaptureDR; }}
+	public GameObject CaptureObjectUL { get { return captureObjectUL; } set { captureObjectUL = value; }}
+	public GameObject CaptureObjectUR { get { return captureObjectUR; } set { captureObjectUR = value; }}
+	public GameObject CaptureObjectDL { get { return captureObjectDL; } set { captureObjectDL = value; }}
+	public GameObject CaptureObjectDR { get { return captureObjectDR; } set { captureObjectDR = value; }}
 	public bool CapturePerformed { get { return capturePerformed; } set { capturePerformed = value; }}
 	public bool RecaptureCheck { get { return recaptureCheck; }}
 	public bool CanRecapture { get { return canRecapture; }}
@@ -245,7 +251,8 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureUL = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "UL";
+					CaptureObjectUL = potentialObject;
 
 					if (!capturePrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -253,8 +260,11 @@ public class GameController : MonoBehaviour
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureUL = false;
+			}
+			else
+			{
+				canCaptureUL = false;
+				potentialMoveLabel.MoveDirection = null;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
@@ -270,16 +280,22 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureUL = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "UL";
+					CaptureObjectUL = potentialObject;
 					
 					if (!capturePrecheck)
+					{
 						potentialMoveLabel.EnableCaptureIndicator();
+					}
 
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureUL = false;
+			}
+			else
+			{
+				canCaptureUL = false;
+				potentialMoveLabel.MoveDirection = "UL";
 			}
 		}
 	}
@@ -329,16 +345,22 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureUR = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "UR";
+					CaptureObjectUR = potentialObject;
 					
 					if (!capturePrecheck)
+					{
 						potentialMoveLabel.EnableCaptureIndicator();
+					}
 
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureUR = false;
+			}
+			else
+			{
+				canCaptureUR = false;
+				potentialMoveLabel.MoveDirection = null;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
@@ -354,16 +376,22 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureUR = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "UR";
+					CaptureObjectUR = potentialObject;
 					
 					if (!capturePrecheck)
+					{
 						potentialMoveLabel.EnableCaptureIndicator();
+					}
 
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureUR = false;
+			}
+			else
+			{
+				canCaptureUR = false;
+				potentialMoveLabel.MoveDirection = null;
 			}
 		}
 	}
@@ -413,16 +441,23 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureDL = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "DL";
+					CaptureObjectDL = potentialObject;
+					Debug.Log("HERE :" + CaptureObjectDL.name);
 					
 					if (!capturePrecheck)
+					{
 						potentialMoveLabel.EnableCaptureIndicator();
+					}
 
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureDL = false;
+			}
+			else
+			{
+				canCaptureUL = false;
+				potentialMoveLabel.MoveDirection = null;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
@@ -438,16 +473,22 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureDL = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "DL";
+					CaptureObjectDL = potentialObject;
 					
 					if (!capturePrecheck)
+					{
 						potentialMoveLabel.EnableCaptureIndicator();
+					}
 
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureDL = false;
+			}
+			else
+			{
+				canCaptureUL = false;
+				potentialMoveLabel.MoveDirection = null;
 			}
 		}
 	}
@@ -497,16 +538,22 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureDR = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "DR";
+					CaptureObjectDR = potentialObject;
 					
 					if (!capturePrecheck)
+					{
 						potentialMoveLabel.EnableCaptureIndicator();
+					}
 
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureDR = false;
+			}
+			else
+			{
+				canCaptureDR = false;
+				potentialMoveLabel.MoveDirection = null;
 			}
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
@@ -522,16 +569,22 @@ public class GameController : MonoBehaviour
 				{
 					canCaptureDR = true;
 					captureRequired = true;
-					CaptureObject = potentialObject;
+					potentialMoveLabel.MoveDirection = "DR";
+					CaptureObjectDR = potentialObject;
 					
 					if (!capturePrecheck)
+					{
 						potentialMoveLabel.EnableCaptureIndicator();
+					}
 
 					if (recaptureCheck)
 						canRecapture = true;
 				}
-				else
-					canCaptureDR = false;
+			}
+			else
+			{
+				canCaptureDR = false;
+				potentialMoveLabel.MoveDirection = null;
 			}
 		}
 	}

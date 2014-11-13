@@ -13,11 +13,14 @@ public class PositionLabel : MonoBehaviour
 	bool moveIndicatorEnabled = false;
 	bool captureIndicatorEnabled = false;
 	CheckerContainer occupyingChecker;
+	CheckerContainer captureContainerScript;
+	string moveDirection;
 	public int PositionValue { get { return positionValue; }}
 	public int OccupationValue { get { return occupationValue; } set { occupationValue = value; }}
 	public bool MoveIndicatorEnabled { get { return moveIndicatorEnabled; } set { moveIndicatorEnabled = value; }}
 	public bool CaptureIndicatorEnabled { get { return captureIndicatorEnabled; } set { captureIndicatorEnabled = value; }}
 	public CheckerContainer OccupyingChecker { get { return occupyingChecker; } set { occupyingChecker = value; }}
+	public string MoveDirection { get { return moveDirection; } set { moveDirection = value; }}
 
 	void OnEnable()
 	{
@@ -47,14 +50,40 @@ public class PositionLabel : MonoBehaviour
 			gameController.ClearPositionLabels();
 			gameController.ResetOccupationValue(checkerContainerScript.BoardLocation);
 
-			CheckerContainer captureContainerScript = gameController.CaptureObject.GetComponent<CheckerContainer>();
-			gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
+			if (MoveDirection == "UL")
+			{
+				captureContainerScript = gameController.CaptureObjectUL.GetComponent<CheckerContainer>();
+				gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
+			}
+			else if (MoveDirection == "UR")
+			{
+				captureContainerScript = gameController.CaptureObjectUR.GetComponent<CheckerContainer>();
+				gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
+			}
+			else if (MoveDirection == "DL")
+			{
+				captureContainerScript = gameController.CaptureObjectDL.GetComponent<CheckerContainer>();
+				gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
+			}
+			else if (MoveDirection == "DR")
+			{
+				captureContainerScript = gameController.CaptureObjectDR.GetComponent<CheckerContainer>();
+				gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
+			}
 
 			gameController.CapturePerformed = true;
 			OccupyingChecker = checkerContainerScript;
 			OccupationValue = checkerContainerScript.PieceColor;
 			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
-			Destroy(gameController.CaptureObject, 1.0f);
+
+			if (MoveDirection == "UL")
+				Destroy(gameController.CaptureObjectUL, 1.0f);
+			else if (MoveDirection == "UR")
+				Destroy(gameController.CaptureObjectUR, 1.0f);
+			else if (MoveDirection == "DL")
+				Destroy(gameController.CaptureObjectDL, 1.0f);
+			else if (MoveDirection == "DR")
+				Destroy(gameController.CaptureObjectDR, 1.0f);
 		}
 		else if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
 		{
