@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameController : MonoBehaviour
 {
-	[SerializeField] bool whiteStart = true;
+	[SerializeField] UILabel informationText;
 	[SerializeField] PositionLabel[] positionLabels;
 	[SerializeField] int[] upLeftMoveExclusions;
 	[SerializeField] int[] upRightMoveExclusions;
@@ -47,10 +47,23 @@ public class GameController : MonoBehaviour
 
 	void Start()
 	{
-		if (whiteStart)
-			whiteTurn = true;
+		int randomInt = Random.Range(0, 2);
+
+		if (randomInt == 0)
+			WhiteTurn = true;
 		else
+			WhiteTurn = false;
+
+		if (WhiteTurn)
+		{
+			whiteTurn = true;
+			informationText.text = "White Turn";
+		}
+		else
+		{
 			whiteTurn = false;
+			informationText.text = "Red Turn";
+		}
 	}
 
 	public void ClearPositionLabels()
@@ -203,7 +216,12 @@ public class GameController : MonoBehaviour
 				CheckAllMove();
 		}
 		else if (captureRequired && !canCaptureUL && !canCaptureUR && !canCaptureDL && !canCaptureDR)
-			Debug.Log("Capture Required");
+		{
+			if (WhiteTurn)
+				informationText.text = "White Turn: Capture Required";
+			else
+				informationText.text = "Red Turn: Capture Required";
+		}
 	}
 
 	void CheckUpLeftMove()
@@ -443,7 +461,6 @@ public class GameController : MonoBehaviour
 					captureRequired = true;
 					potentialMoveLabel.MoveDirection = "DL";
 					CaptureObjectDL = potentialObject;
-					Debug.Log("HERE :" + CaptureObjectDL.name);
 					
 					if (!capturePrecheck)
 					{

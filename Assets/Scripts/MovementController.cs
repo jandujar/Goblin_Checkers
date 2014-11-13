@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MovementController : MonoBehaviour
 {
+	[SerializeField] UILabel informationText;
 	[SerializeField] GameController gameController;
 	bool enableMovement = false;
 	GameObject checkerObject;
@@ -41,17 +42,29 @@ public class MovementController : MonoBehaviour
 					else if (!gameController.RecaptureCheck)
 					{
 						if (gameController.WhiteTurn)
+						{
 							gameController.WhiteTurn = false;
+							informationText.text = "Red Turn";
+						}
 						else
+						{
 							gameController.WhiteTurn = true;
+							informationText.text = "White Turn";
+						}
 					}
 				}
 				else if (!gameController.RecaptureCheck || !gameController.CapturePerformed || (!gameController.CanCaptureUL && !gameController.CanCaptureUR && !gameController.CanCaptureDL && !gameController.CanCaptureDR))
 				{
 					if (gameController.WhiteTurn)
+					{
 						gameController.WhiteTurn = false;
+						informationText.text = "Red Turn";
+					}
 					else
+					{
 						gameController.WhiteTurn = true;
+						informationText.text = "White Turn";
+					}
 				}
 
 				gameController.FindCaptures();
