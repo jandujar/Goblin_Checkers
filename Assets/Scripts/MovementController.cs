@@ -5,6 +5,7 @@ public class MovementController : MonoBehaviour
 {
 	[SerializeField] UILabel informationText;
 	[SerializeField] GameController gameController;
+	[SerializeField] OpponentAI opponentAI;
 	CheckerContainer checkerContainerScript;
 	bool enableMovement = false;
 	GameObject checkerObject;
@@ -46,11 +47,17 @@ public class MovementController : MonoBehaviour
 						{
 							gameController.WhiteTurn = false;
 							informationText.text = "Red Turn";
+
+							if (opponentAI.playingAI && opponentAI.aiCheckerColor == 2)
+								opponentAI.RunAIChecklist();
 						}
 						else
 						{
 							gameController.WhiteTurn = true;
 							informationText.text = "White Turn";
+
+							if (opponentAI.playingAI && opponentAI.aiCheckerColor == 1)
+								opponentAI.RunAIChecklist();
 						}
 					}
 				}
@@ -60,11 +67,17 @@ public class MovementController : MonoBehaviour
 					{
 						gameController.WhiteTurn = false;
 						informationText.text = "Red Turn";
+
+						if (opponentAI.playingAI && opponentAI.aiCheckerColor == 2)
+							opponentAI.RunAIChecklist();
 					}
 					else
 					{
 						gameController.WhiteTurn = true;
 						informationText.text = "White Turn";
+
+						if (opponentAI.playingAI && opponentAI.aiCheckerColor == 1)
+							opponentAI.RunAIChecklist();
 					}
 				}
 

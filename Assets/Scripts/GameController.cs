@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
+	public OpponentAI opponentAI;
 	[SerializeField] UILabel informationText;
 	[SerializeField] UILabel checkerCounter;
 	[SerializeField] PositionContainer[] positionLabels;
@@ -66,12 +67,19 @@ public class GameController : MonoBehaviour
 		{
 			whiteTurn = true;
 			InformationText.text = "White Turn";
+
+			if (opponentAI.playingAI && opponentAI.aiCheckerColor == 1)
+				opponentAI.RunAIChecklist();
 		}
 		else
 		{
 			whiteTurn = false;
 			InformationText.text = "Red Turn";
+
+			if (opponentAI.playingAI && opponentAI.aiCheckerColor == 2)
+				opponentAI.RunAIChecklist();
 		}
+
 	}
 
 	public void ClearPositionLabels()
@@ -244,14 +252,14 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 3].GetComponent<PositionContainer>();
 
-			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionContainer>();
 
-			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
@@ -280,7 +288,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "UL";
 					CaptureObjectUL = potentialObject;
 
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 						potentialMoveLabel.EnableCaptureIndicator();
 
 					if (recaptureCheck)
@@ -309,7 +317,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "UL";
 					CaptureObjectUL = potentialObject;
 					
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 					{
 						potentialMoveLabel.EnableCaptureIndicator();
 					}
@@ -338,14 +346,14 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 4].GetComponent<PositionContainer>();
 
-			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25))
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionContainer>();
 
-			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
@@ -374,7 +382,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "UR";
 					CaptureObjectUR = potentialObject;
 					
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 					{
 						potentialMoveLabel.EnableCaptureIndicator();
 					}
@@ -405,7 +413,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "UR";
 					CaptureObjectUR = potentialObject;
 					
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 					{
 						potentialMoveLabel.EnableCaptureIndicator();
 					}
@@ -434,14 +442,14 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 5].GetComponent<PositionContainer>();
 
-			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionContainer>();
 
-			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
@@ -470,7 +478,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "DL";
 					CaptureObjectDL = potentialObject;
 					
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 					{
 						potentialMoveLabel.EnableCaptureIndicator();
 					}
@@ -501,7 +509,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "DL";
 					CaptureObjectDL = potentialObject;
 					
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 					{
 						potentialMoveLabel.EnableCaptureIndicator();
 					}
@@ -530,14 +538,14 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 4].GetComponent<PositionContainer>();
 
-			if (checkerPosition % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (checkerPosition % 8 != 0 && potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 		else if ((checkerPosition >= 5 && checkerPosition < 9) || (checkerPosition >= 13 && checkerPosition < 17) || (checkerPosition >= 21 && checkerPosition < 25) || checkerPosition >= 29)
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) - 3].GetComponent<PositionContainer>();
 
-			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled)
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
@@ -566,7 +574,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "DR";
 					CaptureObjectDR = potentialObject;
 					
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 					{
 						potentialMoveLabel.EnableCaptureIndicator();
 					}
@@ -597,7 +605,7 @@ public class GameController : MonoBehaviour
 					potentialMoveLabel.MoveDirection = "DR";
 					CaptureObjectDR = potentialObject;
 					
-					if (!capturePrecheck)
+					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 					{
 						potentialMoveLabel.EnableCaptureIndicator();
 					}

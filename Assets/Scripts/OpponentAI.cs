@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class OpponentAI : MonoBehaviour
 {
 	// AI Checklist
 	//
+	// Check if any captures available
+	// 
 	// Piece in danger of being captured
 	// 1. Check if piece is in danger of being captured
 	// 2. If piece is in danger, move another checker to block space to prevent piece from being captured
@@ -15,10 +18,30 @@ public class OpponentAI : MonoBehaviour
 	// 5. Randomly choose checker move that will not put checker in danger of being captured
 	// 6. Choose random move
 
+	[SerializeField] GameController gameController;
+	public bool playingAI = false;
+	public int aiCheckerColor = 2; //1 = White, 2 = Red
 	bool pieceThreatened = false;
+	GameObject[] aiCheckers;
+	List<GameObject> aiCaptureCheckers = new List<GameObject>();
 
 	public void RunAIChecklist()
 	{
+		StartCoroutine(RunChecklist());
+	}
+
+	IEnumerator RunChecklist()
+	{
+		aiCaptureCheckers.Clear();
+
+		// Wait time to give checkers enough time to spawn
+		yield return new WaitForSeconds(0.1f);
+
+		if (aiCheckerColor == 1)
+			aiCheckers = GameObject.FindGameObjectsWithTag("White");
+		else
+			aiCheckers = GameObject.FindGameObjectsWithTag("Red");
+		
 		if (CaptureAnalyzer())
 		{
 			Debug.Log("Random capture performed");
@@ -26,7 +49,7 @@ public class OpponentAI : MonoBehaviour
 		else
 		{
 			ThreatAnalyzer();
-
+			
 			if (pieceThreatened)
 			{
 				if (MoveToBlock())
@@ -48,12 +71,36 @@ public class OpponentAI : MonoBehaviour
 	bool CaptureAnalyzer()
 	{
 		// 1. Check if any captures available
+		if (aiCheckers != null)
+		{
+			foreach (GameObject aiChecker in aiCheckers)
+			{
+				gameController.FindSelectedCheckerOptions(aiChecker);
+
+				if (gameController.CanCaptureUL || gameController.CanCaptureUR || gameController.CanCaptureDL || gameController.CanCaptureDR)
+					aiCaptureCheckers.Add(aiChecker);
+			}
+		}
+
+		Debug.Log("Captures: " + aiCaptureCheckers.Count);
+
+		if (aiCaptureCheckers.Count > 0)
+			return true;
+		else
+		{
+			// Always white turn...
+			gameController.WhiteTurn = true;
+
+			return false;
+		}
+
 		// 2. Check if any multi-captures available
 		// 3. Perform multi-capture moves and return true if available
 		// 4. If no multi-captures but captures available, choose one capture at random and return true
 		// 5. Else, return false
 
-		return false;
+
+		//return false;
 	}
 
 	void ThreatAnalyzer()
@@ -63,7 +110,7 @@ public class OpponentAI : MonoBehaviour
 		// 1. Do threat analysis for all pieces
 		// 2. Store list of pieces in threat of capture
 
-		pieceThreatened = true; // Placeholder for actual threat evaluation
+		pieceThreatened = false; // Placeholder for actual threat evaluation
 	}
 
 	bool MoveToBlock()

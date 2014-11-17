@@ -44,12 +44,25 @@ public class PositionContainer : MonoBehaviour
 	
 	public void On_TouchStart(Gesture gesture)
 	{
-		if (gesture.pickObject == gameObject && CaptureIndicatorEnabled)
+		if (gesture.pickObject == gameObject)
+			TriggerContainer();
+	}
+
+	void Awake()
+	{
+		moveIndicator.SetActive(false);
+		captureIndicator.SetActive(false);
+		positionCollider.enabled = false;
+	}
+
+	public void TriggerContainer()
+	{
+		if (CaptureIndicatorEnabled)
 		{
 			CheckerContainer checkerContainerScript = gameController.CheckerOfInterest.GetComponent<CheckerContainer>();
 			gameController.ClearPositionLabels();
 			gameController.ResetOccupationValue(checkerContainerScript.BoardLocation);
-
+			
 			if (MoveDirection == "UL")
 			{
 				captureContainerScript = gameController.CaptureObjectUL.GetComponent<CheckerContainer>();
@@ -70,17 +83,17 @@ public class PositionContainer : MonoBehaviour
 				captureContainerScript = gameController.CaptureObjectDR.GetComponent<CheckerContainer>();
 				gameController.ResetOccupationValue(captureContainerScript.BoardLocation);
 			}
-
+			
 			gameController.CapturePerformed = true;
 			OccupyingChecker = checkerContainerScript;
 			OccupationValue = checkerContainerScript.PieceColor;
 			movementController.TriggerMovement(gameController.CheckerOfInterest, transform, positionValue);
-
+			
 			if (captureContainerScript.PieceColor == 1)
 				gameController.whiteCheckers.Remove(captureContainerScript.gameObject);
 			else
 				gameController.redCheckers.Remove(captureContainerScript.gameObject);
-
+			
 			if (MoveDirection == "UL")
 				Destroy(gameController.CaptureObjectUL, 1.0f);
 			else if (MoveDirection == "UR")
@@ -91,9 +104,9 @@ public class PositionContainer : MonoBehaviour
 				Destroy(gameController.CaptureObjectDR, 1.0f);
 			else
 				Debug.LogError("MoveDirection is null");
-
+			
 			gameController.CheckerCounter.text = "White: " + gameController.whiteCheckers.Count + " Red: " + gameController.redCheckers.Count;
-
+			
 			if (gameController.whiteCheckers.Count == 0)
 			{
 				gameController.InformationText.text = "Game Over: Red Wins";
@@ -105,7 +118,7 @@ public class PositionContainer : MonoBehaviour
 				gameController.GameOver = true;
 			}
 		}
-		else if (gesture.pickObject == gameObject && MoveIndicatorEnabled)
+		else if (MoveIndicatorEnabled)
 		{
 			gameController.CapturePerformed = false;
 			CheckerContainer checkerContainerScript = gameController.CheckerOfInterest.GetComponent<CheckerContainer>();
@@ -117,16 +130,11 @@ public class PositionContainer : MonoBehaviour
 		}
 	}
 
-	void Awake()
-	{
-		moveIndicator.SetActive(false);
-		captureIndicator.SetActive(false);
-		positionCollider.enabled = false;
-	}
-
 	public void EnableMoveIndicator()
 	{
-		moveIndicator.SetActive(true);
+		if (!AITurn())
+			moveIndicator.SetActive(true);
+
 		MoveIndicatorEnabled = true;
 		positionCollider.enabled = true;
 	}
@@ -140,7 +148,9 @@ public class PositionContainer : MonoBehaviour
 
 	public void EnableCaptureIndicator()
 	{
-		captureIndicator.SetActive(true);
+		if (!AITurn())
+			captureIndicator.SetActive(true);
+
 		CaptureIndicatorEnabled = true;
 		positionCollider.enabled = true;
 	}
@@ -150,5 +160,13 @@ public class PositionContainer : MonoBehaviour
 		captureIndicator.SetActive(false);
 		CaptureIndicatorEnabled = false;
 		positionCollider.enabled = false;
+	}
+
+	bool AITurn()
+	{
+		if (gameController.opponentAI.playingAI && ((gameController.WhiteTurn && gameController.opponentAI.aiCheckerColor == 1) || (!gameController.WhiteTurn && gameController.opponentAI.aiCheckerColor == 2)))
+			return true;
+		else
+			return false;
 	}
 }
