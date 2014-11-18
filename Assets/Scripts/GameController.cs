@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 	public OpponentAI opponentAI;
 	[SerializeField] UILabel informationText;
 	[SerializeField] UILabel checkerCounter;
-	[SerializeField] PositionContainer[] positionLabels;
+	public PositionContainer[] positionLabels;
 	[SerializeField] int[] upLeftMoveExclusions;
 	[SerializeField] int[] upRightMoveExclusions;
 	[SerializeField] int[] downLeftMoveExclusions;
@@ -293,6 +293,9 @@ public class GameController : MonoBehaviour
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else
@@ -318,12 +321,13 @@ public class GameController : MonoBehaviour
 					CaptureObjectUL = potentialObject;
 					
 					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
-					{
 						potentialMoveLabel.EnableCaptureIndicator();
-					}
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else
@@ -353,7 +357,7 @@ public class GameController : MonoBehaviour
 		{
 			potentialMoveLabel = positionLabels[(checkerPosition - 1) + 5].GetComponent<PositionContainer>();
 
-				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
+			if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.MoveIndicatorEnabled && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
 				potentialMoveLabel.EnableMoveIndicator();
 		}
 	}
@@ -383,12 +387,13 @@ public class GameController : MonoBehaviour
 					CaptureObjectUR = potentialObject;
 					
 					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
-					{
 						potentialMoveLabel.EnableCaptureIndicator();
-					}
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else
@@ -414,12 +419,13 @@ public class GameController : MonoBehaviour
 					CaptureObjectUR = potentialObject;
 					
 					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
-					{
 						potentialMoveLabel.EnableCaptureIndicator();
-					}
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else
@@ -479,12 +485,13 @@ public class GameController : MonoBehaviour
 					CaptureObjectDL = potentialObject;
 					
 					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
-					{
 						potentialMoveLabel.EnableCaptureIndicator();
-					}
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else
@@ -510,12 +517,13 @@ public class GameController : MonoBehaviour
 					CaptureObjectDL = potentialObject;
 					
 					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
-					{
 						potentialMoveLabel.EnableCaptureIndicator();
-					}
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else
@@ -575,12 +583,13 @@ public class GameController : MonoBehaviour
 					CaptureObjectDR = potentialObject;
 					
 					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
-					{
 						potentialMoveLabel.EnableCaptureIndicator();
-					}
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else
@@ -606,12 +615,13 @@ public class GameController : MonoBehaviour
 					CaptureObjectDR = potentialObject;
 					
 					if (!capturePrecheck && (!opponentAI.playingAI || opponentAI.aiCheckerColor != checkerContainerScript.PieceColor))
-					{
 						potentialMoveLabel.EnableCaptureIndicator();
-					}
 
 					if (recaptureCheck)
 						canRecapture = true;
+
+					if (opponentAI.playingAI && checkerContainerScript.PieceColor == opponentAI.aiCheckerColor)
+						opponentAI.aiCapturePositions.Add(potentialMoveLabel);
 				}
 			}
 			else

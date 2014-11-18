@@ -24,6 +24,7 @@ public class OpponentAI : MonoBehaviour
 	bool pieceThreatened = false;
 	GameObject[] aiCheckers;
 	List<GameObject> aiCaptureCheckers = new List<GameObject>();
+	public List<PositionContainer> aiCapturePositions = new List<PositionContainer>();
 
 	public void RunAIChecklist()
 	{
@@ -44,7 +45,17 @@ public class OpponentAI : MonoBehaviour
 		
 		if (CaptureAnalyzer())
 		{
-			Debug.Log("Random capture performed");
+			int randomCheckerInt = Random.Range(0, aiCaptureCheckers.Count);
+			GameObject randomChecker = aiCaptureCheckers[randomCheckerInt];
+
+			aiCapturePositions.Clear();
+			gameController.FindSelectedCheckerOptions(randomChecker);
+
+			int randomPositionContainer = Random.Range(0, aiCapturePositions.Count);
+			aiCapturePositions[randomPositionContainer].EnableCaptureIndicator();
+			aiCapturePositions[randomPositionContainer].TriggerContainer();
+
+			StartCoroutine(CheckRecapture(randomChecker));
 		}
 		else
 		{
@@ -73,6 +84,8 @@ public class OpponentAI : MonoBehaviour
 		// 1. Check if any captures available
 		if (aiCheckers != null)
 		{
+			aiCaptureCheckers.Clear();
+
 			foreach (GameObject aiChecker in aiCheckers)
 			{
 				gameController.FindSelectedCheckerOptions(aiChecker);
@@ -81,8 +94,6 @@ public class OpponentAI : MonoBehaviour
 					aiCaptureCheckers.Add(aiChecker);
 			}
 		}
-
-		Debug.Log("Captures: " + aiCaptureCheckers.Count);
 
 		if (aiCaptureCheckers.Count > 0)
 			return true;
@@ -161,5 +172,23 @@ public class OpponentAI : MonoBehaviour
 		// 3. Else, return false
 
 		return true;
+	}
+
+	IEnumerator CheckRecapture(GameObject selectedChecker)
+	{
+		yield return new WaitForSeconds(2.0f);
+		gameController.FindAdditionalCaptures(selectedChecker);
+
+		if (gameController.CanRecapture)
+		{
+			aiCapturePositions.Clear();
+			gameController.FindSelectedCheckerOptions(selectedChecker);
+			
+			int randomPositionContainer = Random.Range(0, aiCapturePositions.Count);
+			aiCapturePositions[randomPositionContainer].EnableCaptureIndicator();
+			aiCapturePositions[randomPositionContainer].TriggerContainer();
+
+			CheckRecapture(selectedChecker);
+		}
 	}
 }
