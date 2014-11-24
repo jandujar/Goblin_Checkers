@@ -98,7 +98,6 @@ public class GameController : MonoBehaviour
 		canCaptureUR = false;
 		canCaptureDL = false;
 		canCaptureDR = false;
-		CaptureRequired = false;
 	}
 
 	public void FindCaptures()
@@ -290,7 +289,6 @@ public class GameController : MonoBehaviour
 
 	public void FindSelectedCheckerOptions(GameObject selectedChecker)
 	{
-		CaptureRequired = false;
 		CheckerOfInterest = selectedChecker;
 		checkerContainerScript = selectedChecker.GetComponent<CheckerContainer>();
 		checkerPosition = checkerContainerScript.BoardLocation;
@@ -307,8 +305,6 @@ public class GameController : MonoBehaviour
 
 	void SelectedCheckerMoves(GameObject selectedChecker)
 	{
-		CaptureRequired = false;
-
 		if (checkerContainerScript.PieceType == 1)
 		{
 			if (checkerContainerScript.PieceColor == 1)

@@ -100,7 +100,7 @@ public class OpponentAI : MonoBehaviour
 		// 1. Check if any captures available
 		if (aiCheckers != null)
 		{
-			aiCaptureCheckers.Clear();
+			gameController.CaptureRequired = false;
 
 			foreach (GameObject aiChecker in aiCheckers)
 			{
