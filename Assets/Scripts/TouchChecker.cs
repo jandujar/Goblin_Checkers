@@ -41,6 +41,7 @@ public class TouchChecker : MonoBehaviour
 			{
 				gameController.ClearPositionLabels();
 				gameController.FindSelectedCheckerOptions(gameObject);
+				gameController.CheckerOfInterest = gameObject;
 			}
 		}
 	}

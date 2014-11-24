@@ -23,8 +23,11 @@ public class OpponentAI : MonoBehaviour
 	public int aiCheckerColor = 2; //1 = White, 2 = Red
 	bool pieceThreatened = false;
 	GameObject[] aiCheckers;
+	//GameObject[] aiOpponentCheckers;
 	List<GameObject> aiCaptureCheckers = new List<GameObject>();
+	public List<PositionContainer> aiMovePositions = new List<PositionContainer>();
 	public List<PositionContainer> aiCapturePositions = new List<PositionContainer>();
+	public List<PositionContainer> aiThreatenedPositions = new List<PositionContainer>();
 
 	public void RunAIChecklist()
 	{
@@ -33,18 +36,29 @@ public class OpponentAI : MonoBehaviour
 
 	IEnumerator RunChecklist()
 	{
+		gameController.CaptureRequired = false;
 		aiCaptureCheckers.Clear();
+		aiMovePositions.Clear();
+		aiCapturePositions.Clear();
+		aiThreatenedPositions.Clear();
 
 		// Wait time to give checkers enough time to spawn
 		yield return new WaitForSeconds(0.1f);
 
 		if (aiCheckerColor == 1)
+		{
 			aiCheckers = GameObject.FindGameObjectsWithTag("White");
+			//aiOpponentCheckers = GameObject.FindGameObjectsWithTag("Red");
+		}
 		else
+		{
 			aiCheckers = GameObject.FindGameObjectsWithTag("Red");
-		
+			//aiOpponentCheckers = GameObject.FindGameObjectsWithTag("White");
+		}
+
 		if (CaptureAnalyzer())
 		{
+			gameController.ClearPositionLabels();
 			int randomCheckerInt = Random.Range(0, aiCaptureCheckers.Count);
 			GameObject randomChecker = aiCaptureCheckers[randomCheckerInt];
 
@@ -60,27 +74,29 @@ public class OpponentAI : MonoBehaviour
 		else
 		{
 			ThreatAnalyzer();
-			
+
 			if (pieceThreatened)
 			{
 				if (MoveToBlock())
 					Debug.Log("Capture prevented by block");
 				else if (MoveToAvoidCapture())
 					Debug.Log("Capture prevented by move");
-				else if (KingMoveToCapture())
-					Debug.Log("King piece hunting opponent piece");
-				else if (SafeRandomMove())
-					Debug.Log("Safe random move performed");
-				else if (RandomMove())
-					Debug.Log("Random move performed");
-				else
-					Debug.Log("No moves available (Player Wins)");
 			}
+			else if (KingMoveToCapture())
+				Debug.Log("King piece hunting opponent piece");
+			else if (SafeRandomMove())
+				Debug.Log("Safe random move performed");
+			else if (RandomMove())
+				Debug.Log("Random move performed");
+			else
+				Debug.Log("No moves available (Player Wins)");
 		}
 	}
 
 	bool CaptureAnalyzer()
 	{
+		gameController.ClearPositionLabels();
+
 		// 1. Check if any captures available
 		if (aiCheckers != null)
 		{
@@ -100,7 +116,7 @@ public class OpponentAI : MonoBehaviour
 		else
 		{
 			// Always white turn...
-			gameController.WhiteTurn = true;
+			//gameController.WhiteTurn = true;
 
 			return false;
 		}
@@ -116,66 +132,104 @@ public class OpponentAI : MonoBehaviour
 
 	void ThreatAnalyzer()
 	{
+		gameController.ClearPositionLabels();
+
 		pieceThreatened = false;
+		gameController.FindThreats();
+		int index = 0;
 
-		// 1. Do threat analysis for all pieces
-		// 2. Store list of pieces in threat of capture
+		if (aiThreatenedPositions.Count > 0)
+		{
+			pieceThreatened = true;
 
-		pieceThreatened = false; // Placeholder for actual threat evaluation
+			while (index < aiThreatenedPositions.Count - 1)
+			{
+				if (aiThreatenedPositions[index] == aiThreatenedPositions[index + 1])
+					aiThreatenedPositions.RemoveAt(index);
+				else
+					index++;
+			}
+		}
+		else
+			pieceThreatened = false;
 	}
 
 	bool MoveToBlock()
 	{
+		gameController.ClearPositionLabels();
+
 		// 1. Retrieve list of pieces in threat of capture
 		// 2. Find end position of enemy checker after capture for all end positions
 		// 3. Find if any checkers can move to any of those positions
 		// 4. If checker can move to any end positions, execute move and return true
 		// 5. Else, return false
 
-		return true;
+		return false;
 	}
 
 	bool MoveToAvoidCapture()
 	{
+		gameController.ClearPositionLabels();
+
 		// 1. Retrieve list of pieces in threat of capture
 		// 2. If any pieces can move to any position that wont result in capture, execute move and return true
 		// 3. Else, return false
 
-		return true;
+		return false;
 	}
 
 	bool KingMoveToCapture()
 	{
+		gameController.ClearPositionLabels();
+
 		// 1. Check if any AI checkers are king pieces (return false if no king pieces)
 		// 2. Choose closest enemy piece
 		// 3. Choose move toward enemy piece that doesn't put king in threat of capture (if no moves exist, return false)
 		// 4. Else, return false
 
-		return true;
+		return false;
 	}
 
 	bool SafeRandomMove()
 	{
+		gameController.ClearPositionLabels();
+
 		// 1. Create list of all moves available that don't put piece in threat of capture
 		// 2. Check if any moves result in AI checker turning into king
 		// 3. If moves exist to turn piece into king, execute random move and return true
 		// 4. If no king move available but another move available, execute random move and return true
 		// 5. Else, return false
 
-		return true;
+		return false;
 	}
 
 	bool RandomMove()
 	{
-		// 1. Create list of all potential moves
-		// 2. If move available, execute random move and return true
-		// 3. Else, return false
+		gameController.ClearPositionLabels();
 
-		return true;
+		// 1. Create list of all potential moves
+		gameController.FindMoves();
+
+		// 2. If move available, execute random move and return true
+		if (aiMovePositions.Count > 0)
+		{
+			int randomInt = Random.Range(0, aiMovePositions.Count);
+			aiMovePositions[randomInt].TriggerContainer();
+			return true;
+		}
+		else if (aiCheckers.Length > 0)
+		{
+			RandomMove();
+			return true;
+		}
+		else
+			return false;
 	}
 
 	IEnumerator CheckRecapture(GameObject selectedChecker)
 	{
+		gameController.ClearPositionLabels();
+
 		yield return new WaitForSeconds(2.0f);
 		gameController.FindAdditionalCaptures(selectedChecker);
 

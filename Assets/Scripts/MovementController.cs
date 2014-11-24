@@ -81,8 +81,6 @@ public class MovementController : MonoBehaviour
 					}
 				}
 
-				gameController.FindCaptures();
-
 				if (checkerContainerScript.BoardLocation >= 29 && checkerContainerScript.PieceColor == 1 && checkerContainerScript.PieceType != 2)
 				{
 					checkerContainerScript.PieceType = 2;
