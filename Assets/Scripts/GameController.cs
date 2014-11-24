@@ -153,7 +153,7 @@ public class GameController : MonoBehaviour
 
 	public void FindMoves()
 	{
-		CaptureRequired = false;
+		//CaptureRequired = false;
 		opponentAI.aiMovePositions.Clear();
 		movePrecheck = true;
 		
@@ -203,7 +203,7 @@ public class GameController : MonoBehaviour
 
 	public void FindThreats()
 	{
-		CaptureRequired = false;
+		//CaptureRequired = false;
 		checkerPrecheck = true;
 		threatCheck = true;
 		
@@ -256,7 +256,7 @@ public class GameController : MonoBehaviour
 
 	public void FindAdditionalCaptures(GameObject capturingChecker)
 	{
-		CaptureRequired = false;
+		//CaptureRequired = false;
 		CheckerOfInterest = capturingChecker;
 		checkerContainerScript = capturingChecker.GetComponent<CheckerContainer>();
 		checkerPosition = checkerContainerScript.BoardLocation;

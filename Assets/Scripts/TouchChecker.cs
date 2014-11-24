@@ -37,8 +37,11 @@ public class TouchChecker : MonoBehaviour
 	{
 		if (gesture.pickObject == gameObject && !gameController.CanRecapture)
 		{
-			gameController.ClearPositionLabels();
-			gameController.FindSelectedCheckerOptions(gameObject);
+			if (!gameController.opponentAI.playingAI || ((gameController.WhiteTurn && gameController.opponentAI.aiCheckerColor != 1) || (!gameController.WhiteTurn && gameController.opponentAI.aiCheckerColor != 2)))
+			{
+				gameController.ClearPositionLabels();
+				gameController.FindSelectedCheckerOptions(gameObject);
+			}
 		}
 	}
 }
