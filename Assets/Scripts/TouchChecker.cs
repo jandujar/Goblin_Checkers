@@ -35,14 +35,10 @@ public class TouchChecker : MonoBehaviour
 
 	public void On_TouchStart(Gesture gesture)
 	{
-		if (gesture.pickObject == gameObject)
+		if (gesture.pickObject == gameObject && !gameController.CanRecapture)
 		{
-			if (!gameController.CanRecapture)
-			{
-				gameController.ClearPositionLabels();
-				gameController.FindSelectedCheckerOptions(gameObject);
-				gameController.CheckerOfInterest = gameObject;
-			}
+			gameController.ClearPositionLabels();
+			gameController.FindSelectedCheckerOptions(gameObject);
 		}
 	}
 }

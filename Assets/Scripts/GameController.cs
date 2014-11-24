@@ -98,6 +98,7 @@ public class GameController : MonoBehaviour
 		canCaptureUR = false;
 		canCaptureDL = false;
 		canCaptureDR = false;
+		CaptureRequired = false;
 	}
 
 	public void FindCaptures()
@@ -153,6 +154,7 @@ public class GameController : MonoBehaviour
 
 	public void FindMoves()
 	{
+		CaptureRequired = false;
 		opponentAI.aiMovePositions.Clear();
 		movePrecheck = true;
 		
@@ -197,15 +199,12 @@ public class GameController : MonoBehaviour
 		else if (checkerContainerScript.PieceType == 2)
 			CheckAllMove();
 
-//		if (opponentAI.aiMovePositions.Count == 0)
-//			FindMoves();
-		
-		//checkerPrecheck = false;
 		movePrecheck = false;
 	}
 
 	public void FindThreats()
 	{
+		CaptureRequired = false;
 		checkerPrecheck = true;
 		threatCheck = true;
 		
@@ -258,6 +257,7 @@ public class GameController : MonoBehaviour
 
 	public void FindAdditionalCaptures(GameObject capturingChecker)
 	{
+		CaptureRequired = false;
 		CheckerOfInterest = capturingChecker;
 		checkerContainerScript = capturingChecker.GetComponent<CheckerContainer>();
 		checkerPosition = checkerContainerScript.BoardLocation;
@@ -290,6 +290,7 @@ public class GameController : MonoBehaviour
 
 	public void FindSelectedCheckerOptions(GameObject selectedChecker)
 	{
+		CaptureRequired = false;
 		CheckerOfInterest = selectedChecker;
 		checkerContainerScript = selectedChecker.GetComponent<CheckerContainer>();
 		checkerPosition = checkerContainerScript.BoardLocation;
@@ -306,6 +307,8 @@ public class GameController : MonoBehaviour
 
 	void SelectedCheckerMoves(GameObject selectedChecker)
 	{
+		CaptureRequired = false;
+
 		if (checkerContainerScript.PieceType == 1)
 		{
 			if (checkerContainerScript.PieceColor == 1)
@@ -671,7 +674,6 @@ public class GameController : MonoBehaviour
 
 			if (potentialMoveLabel.OccupationValue != 0 && potentialMoveLabel.OccupationValue != checkerContainerScript.PieceColor)
 			{
-				Debug.Log("Check");
 				var potentialObject = potentialMoveLabel.OccupyingChecker.gameObject;
 				var potentialThreatened = potentialMoveLabel;
 				potentialMoveLabel = positionLabels[(checkerPosition - 1) - 9].GetComponent<PositionContainer>();
