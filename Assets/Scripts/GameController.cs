@@ -103,7 +103,7 @@ public class GameController : MonoBehaviour
 	public void FindCaptures()
 	{
 		checkerPrecheck = true;
-		CaptureRequired = false;
+		//CaptureRequired = false;
 
 		if (WhiteTurn)
 		{
@@ -256,7 +256,7 @@ public class GameController : MonoBehaviour
 
 	public void FindAdditionalCaptures(GameObject capturingChecker)
 	{
-		//CaptureRequired = false;
+		CaptureRequired = false;
 		CheckerOfInterest = capturingChecker;
 		checkerContainerScript = capturingChecker.GetComponent<CheckerContainer>();
 		checkerPosition = checkerContainerScript.BoardLocation;
@@ -284,6 +284,7 @@ public class GameController : MonoBehaviour
 				CheckAllCapture();
 		}
 
+		Debug.Log(canRecapture);
 		recaptureCheck = false;
 	}
 

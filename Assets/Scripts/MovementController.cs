@@ -40,7 +40,19 @@ public class MovementController : MonoBehaviour
 					gameController.FindAdditionalCaptures(checkerObject);
 
 					if (gameController.CanRecapture)
+					{
+						Debug.Log("HERE");
 						gameController.FindCaptures();
+
+						if (opponentAI.playingAI)
+						{
+							if (gameController.WhiteTurn && opponentAI.aiCheckerColor == 1)
+								opponentAI.RunAIChecklist();
+							else if (!gameController.WhiteTurn && opponentAI.aiCheckerColor == 2)
+								opponentAI.RunAIChecklist();
+						}
+
+					}
 					else if (!gameController.RecaptureCheck)
 					{
 						if (gameController.WhiteTurn)
@@ -50,6 +62,8 @@ public class MovementController : MonoBehaviour
 
 							if (opponentAI.playingAI && opponentAI.aiCheckerColor == 2)
 								opponentAI.RunAIChecklist();
+
+							gameController.FindCaptures();
 						}
 						else
 						{
@@ -58,6 +72,8 @@ public class MovementController : MonoBehaviour
 
 							if (opponentAI.playingAI && opponentAI.aiCheckerColor == 1)
 								opponentAI.RunAIChecklist();
+
+							gameController.FindCaptures();
 						}
 					}
 				}
@@ -70,6 +86,8 @@ public class MovementController : MonoBehaviour
 
 						if (opponentAI.playingAI && opponentAI.aiCheckerColor == 2)
 							opponentAI.RunAIChecklist();
+
+						gameController.FindCaptures();
 					}
 					else
 					{
@@ -78,10 +96,10 @@ public class MovementController : MonoBehaviour
 
 						if (opponentAI.playingAI && opponentAI.aiCheckerColor == 1)
 							opponentAI.RunAIChecklist();
+
+						gameController.FindCaptures();
 					}
 				}
-
-				gameController.FindCaptures();
 
 				if (checkerContainerScript.BoardLocation >= 29 && checkerContainerScript.PieceColor == 1 && checkerContainerScript.PieceType != 2)
 				{
