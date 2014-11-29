@@ -36,14 +36,14 @@ public class OpponentAI : MonoBehaviour
 
 	IEnumerator RunChecklist()
 	{
-		gameController.CaptureRequired = false;
+		// Wait time to give checkers enough time to spawn
+		yield return new WaitForSeconds(0.1f);
+
 		aiCaptureCheckers.Clear();
 		aiMovePositions.Clear();
 		aiCapturePositions.Clear();
 		aiThreatenedPositions.Clear();
-
-		// Wait time to give checkers enough time to spawn
-		yield return new WaitForSeconds(0.1f);
+		//gameController.CaptureRequired = false;
 
 		if (aiCheckerColor == 1)
 		{
@@ -75,13 +75,10 @@ public class OpponentAI : MonoBehaviour
 		{
 			ThreatAnalyzer();
 
-			if (pieceThreatened)
-			{
-				if (MoveToBlock())
-					Debug.Log("Capture prevented by block");
-				else if (MoveToAvoidCapture())
-					Debug.Log("Capture prevented by move");
-			}
+			if (pieceThreatened && MoveToBlock())
+				Debug.Log("Capture prevented by block");
+			else if (pieceThreatened && MoveToAvoidCapture())
+				Debug.Log("Capture prevented by move");
 			else if (KingMoveToCapture())
 				Debug.Log("King piece hunting opponent piece");
 			else if (SafeRandomMove())
@@ -95,7 +92,9 @@ public class OpponentAI : MonoBehaviour
 
 	bool CaptureAnalyzer()
 	{
+		Debug.Log("1");
 		gameController.ClearPositionLabels();
+		aiCaptureCheckers.Clear();
 
 		// 1. Check if any captures available
 		if (aiCheckers != null)
@@ -114,12 +113,7 @@ public class OpponentAI : MonoBehaviour
 		if (aiCaptureCheckers.Count > 0)
 			return true;
 		else
-		{
-			// Always white turn...
-			//gameController.WhiteTurn = true;
-
 			return false;
-		}
 
 		// 2. Check if any multi-captures available
 		// 3. Perform multi-capture moves and return true if available
@@ -132,10 +126,13 @@ public class OpponentAI : MonoBehaviour
 
 	void ThreatAnalyzer()
 	{
+		Debug.Log("2");
 		gameController.ClearPositionLabels();
 
 		pieceThreatened = false;
+		Debug.Log("Before: " + gameController.CaptureRequired);
 		gameController.FindThreats();
+		Debug.Log("After: " + gameController.CaptureRequired);
 		int index = 0;
 
 		if (aiThreatenedPositions.Count > 0)
@@ -156,6 +153,7 @@ public class OpponentAI : MonoBehaviour
 
 	bool MoveToBlock()
 	{
+		Debug.Log("3");
 		gameController.ClearPositionLabels();
 
 		// 1. Retrieve list of pieces in threat of capture
@@ -169,6 +167,7 @@ public class OpponentAI : MonoBehaviour
 
 	bool MoveToAvoidCapture()
 	{
+		Debug.Log("4");
 		gameController.ClearPositionLabels();
 
 		// 1. Retrieve list of pieces in threat of capture
@@ -180,6 +179,7 @@ public class OpponentAI : MonoBehaviour
 
 	bool KingMoveToCapture()
 	{
+		Debug.Log("5");
 		gameController.ClearPositionLabels();
 
 		// 1. Check if any AI checkers are king pieces (return false if no king pieces)
@@ -192,6 +192,8 @@ public class OpponentAI : MonoBehaviour
 
 	bool SafeRandomMove()
 	{
+		Debug.Log("6");
+		//gameController.CaptureRequired = false;
 		gameController.ClearPositionLabels();
 
 		// 1. Create list of all moves available that don't put piece in threat of capture
@@ -205,6 +207,8 @@ public class OpponentAI : MonoBehaviour
 
 	bool RandomMove()
 	{
+		Debug.Log("7");
+		//gameController.CaptureRequired = false;
 		gameController.ClearPositionLabels();
 
 		// 1. Create list of all potential moves
@@ -228,6 +232,7 @@ public class OpponentAI : MonoBehaviour
 
 	IEnumerator CheckRecapture(GameObject selectedChecker)
 	{
+		Debug.Log("8");
 		gameController.ClearPositionLabels();
 
 		yield return new WaitForSeconds(2.0f);

@@ -103,7 +103,7 @@ public class GameController : MonoBehaviour
 	public void FindCaptures()
 	{
 		checkerPrecheck = true;
-		//CaptureRequired = false;
+		CaptureRequired = false;
 
 		if (WhiteTurn)
 		{
@@ -153,7 +153,7 @@ public class GameController : MonoBehaviour
 
 	public void FindMoves()
 	{
-		//CaptureRequired = false;
+		CaptureRequired = false;
 		opponentAI.aiMovePositions.Clear();
 		movePrecheck = true;
 		
@@ -203,7 +203,6 @@ public class GameController : MonoBehaviour
 
 	public void FindThreats()
 	{
-		//CaptureRequired = false;
 		checkerPrecheck = true;
 		threatCheck = true;
 		
@@ -252,6 +251,7 @@ public class GameController : MonoBehaviour
 		
 		checkerPrecheck = false;
 		threatCheck = false;
+		CaptureRequired = false;
 	}
 
 	public void FindAdditionalCaptures(GameObject capturingChecker)
@@ -284,7 +284,6 @@ public class GameController : MonoBehaviour
 				CheckAllCapture();
 		}
 
-		Debug.Log(canRecapture);
 		recaptureCheck = false;
 	}
 
@@ -406,9 +405,11 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureUL = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "UL";
 					CaptureObjectUL = potentialObject;
+
+					if (!threatCheck)
+						CaptureRequired = true;
 
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -442,9 +443,11 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureUL = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "UL";
 					CaptureObjectUL = potentialObject;
+
+					if (!threatCheck)
+						CaptureRequired = true;
 					
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -524,9 +527,11 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureUR = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "UR";
 					CaptureObjectUR = potentialObject;
+
+					if (!threatCheck)
+						CaptureRequired = true;
 					
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -560,9 +565,11 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureUR = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "UR";
 					CaptureObjectUR = potentialObject;
+
+					if (!threatCheck)
+						CaptureRequired = true;
 					
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -642,9 +649,11 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureDL = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "DL";
 					CaptureObjectDL = potentialObject;
+
+					if (!threatCheck)
+						CaptureRequired = true;
 					
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -678,9 +687,11 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureDL = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "DL";
 					CaptureObjectDL = potentialObject;
+
+					if (!threatCheck)
+						CaptureRequired = true;
 					
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -760,9 +771,11 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureDR = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "DR";
 					CaptureObjectDR = potentialObject;
+
+					if (!threatCheck)
+						CaptureRequired = true;
 					
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
@@ -796,10 +809,12 @@ public class GameController : MonoBehaviour
 				if (potentialMoveLabel.OccupationValue == 0 && !potentialMoveLabel.CaptureIndicatorEnabled)
 				{
 					canCaptureDR = true;
-					CaptureRequired = true;
 					potentialMoveLabel.MoveDirection = "DR";
 					CaptureObjectDR = potentialObject;
-					
+
+					if (!threatCheck)
+						CaptureRequired = true;
+
 					if (!checkerPrecheck)
 						potentialMoveLabel.EnableCaptureIndicator();
 

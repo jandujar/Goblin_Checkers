@@ -6,11 +6,17 @@ public class MovementController : MonoBehaviour
 	[SerializeField] UILabel informationText;
 	[SerializeField] GameController gameController;
 	[SerializeField] OpponentAI opponentAI;
+	[SerializeField] Collider touchBlocker;
 	CheckerContainer checkerContainerScript;
 	bool enableMovement = false;
 	GameObject checkerObject;
 	Transform newTransform;
 	int positionValue;
+
+	void Start()
+	{
+		touchBlocker.enabled = false;
+	}
 
 	public void TriggerMovement(GameObject selectedChecker, Transform positionTransform, int boardLocation)
 	{
@@ -26,14 +32,19 @@ public class MovementController : MonoBehaviour
 		{
 			if (Vector3.Distance(checkerObject.transform.position, newTransform.position) > 0.001f)
 			{
+				if (!touchBlocker.enabled)
+					touchBlocker.enabled = true;
+
 				checkerObject.transform.position = Vector3.Lerp(checkerObject.transform.position, newTransform.position, Time.deltaTime * 4f);
-				checkerContainerScript = checkerObject.GetComponent<CheckerContainer>();
-				checkerContainerScript.BoardLocation = positionValue;
 			}
 			else
 			{
-				checkerObject.transform.position = newTransform.position;
 				enableMovement = false;
+				touchBlocker.enabled = false;
+
+				checkerObject.transform.position = newTransform.position;
+				checkerContainerScript = checkerObject.GetComponent<CheckerContainer>();
+				checkerContainerScript.BoardLocation = positionValue;
 
 				if (!gameController.GameOver && gameController.CapturePerformed)
 				{
@@ -41,7 +52,6 @@ public class MovementController : MonoBehaviour
 
 					if (gameController.CanRecapture)
 					{
-						Debug.Log("HERE");
 						gameController.FindCaptures();
 
 						if (opponentAI.playingAI)
@@ -77,8 +87,10 @@ public class MovementController : MonoBehaviour
 						}
 					}
 				}
-				else if (!gameController.GameOver && (!gameController.RecaptureCheck || !gameController.CapturePerformed || (!gameController.CanCaptureUL && !gameController.CanCaptureUR && !gameController.CanCaptureDL && !gameController.CanCaptureDR)))
+				else if (!gameController.GameOver)
 				{
+					gameController.CaptureRequired = false;
+
 					if (gameController.WhiteTurn)
 					{
 						gameController.WhiteTurn = false;
