@@ -46,7 +46,7 @@ public class MovementController : MonoBehaviour
 				checkerContainerScript = checkerObject.GetComponent<CheckerContainer>();
 				checkerContainerScript.BoardLocation = positionValue;
 
-				if (!gameController.GameOver && gameController.CapturePerformed)
+				if (gameController.CapturePerformed)
 				{
 					gameController.FindAdditionalCaptures(checkerObject);
 
@@ -63,7 +63,7 @@ public class MovementController : MonoBehaviour
 						}
 
 					}
-					else if (!gameController.RecaptureCheck)
+					else
 					{
 						if (gameController.WhiteTurn)
 						{

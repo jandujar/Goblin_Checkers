@@ -130,9 +130,7 @@ public class OpponentAI : MonoBehaviour
 		gameController.ClearPositionLabels();
 
 		pieceThreatened = false;
-		Debug.Log("Before: " + gameController.CaptureRequired);
 		gameController.FindThreats();
-		Debug.Log("After: " + gameController.CaptureRequired);
 		int index = 0;
 
 		if (aiThreatenedPositions.Count > 0)
@@ -244,8 +242,12 @@ public class OpponentAI : MonoBehaviour
 			gameController.FindSelectedCheckerOptions(selectedChecker);
 			
 			int randomPositionContainer = Random.Range(0, aiCapturePositions.Count);
-			aiCapturePositions[randomPositionContainer].EnableCaptureIndicator();
-			aiCapturePositions[randomPositionContainer].TriggerContainer();
+
+			if (randomPositionContainer < aiCapturePositions.Count && aiCapturePositions.Count != 0)
+			{
+				aiCapturePositions[randomPositionContainer].EnableCaptureIndicator();
+				aiCapturePositions[randomPositionContainer].TriggerContainer();
+			}
 
 			CheckRecapture(selectedChecker);
 		}

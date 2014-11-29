@@ -176,7 +176,10 @@ public class GameController : MonoBehaviour
 			if (redCheckers != null)
 			{
 				randomInt = Random.Range(0, redCheckers.Length);
-				CheckerOfInterest = redCheckers[randomInt];
+
+				if (randomInt < redCheckers.Length && redCheckers.Length != 0)
+					CheckerOfInterest = redCheckers[randomInt];
+
 				checkerContainerScript = redCheckers[randomInt].GetComponent<CheckerContainer>();
 				checkerPosition = checkerContainerScript.BoardLocation;
 			}
